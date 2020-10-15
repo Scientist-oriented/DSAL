@@ -9,24 +9,20 @@ class nodemngt:
 
     def add(self, data):
         if self.head == None:
-            self.head = node(data)
+            self.head = data
         else:
             node = self.head
             while node.next:
                 node = node.next
-            node.next = node(data)
+            node.next = data
 
     def display(self):
         node = self.head
-        if node.next == None:
-            print(node.data)
-        else:
-            while node:
-                print(node.data)
-                node = node.next
+        while node:
+            print(node)
+            node = node.next 
 
-test_node = node(1)
 
-test_list = nodemngt(test_node)
+test_list = nodemngt(0)
 test_list.display()
 
