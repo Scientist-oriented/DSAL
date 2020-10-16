@@ -120,7 +120,7 @@ class dnodemngt:
             node = self.head
             while node.data != data:
                 if node.next == None: # 만약에 없는 node라면
-                    print("No data exists")
+                    print("Data not in the list")
                     return
                 node = node.next
             before = node.prev
@@ -129,6 +129,67 @@ class dnodemngt:
             after.prev = node.prev
             del node
             return
+
+    def search_from_top(self, data):
+        if self.head == None:
+            print("Nothing in the List")
+            return
+
+        node = self.head
+        while node.data != data:
+            if node.next == None:
+                print("Data not in the list")
+                return
+            node = node.next
+        print(node.data)
+
+    def search_from_bottom(self, data):
+        if self.head == None:
+            print("Nothing in the List")
+            return
+
+        node = self.tail
+        while node.data != data:
+            if node.prev == None:
+                print("Data not in the list")
+                return
+            node = node.prev
+        print(node.data)
+
+
+    def insert_before(self, data, before_data):
+        if self.head == None:
+            print("{} added in the empty list".format(data))
+            self.head = doubleNode(data)
+
+        elif before_data == self.head.data:
+            temp = self.head
+            self.head = doubleNode(data)
+            self.head.next = temp
+            temp.prev = self.head
+
+        else:
+            node = self.tail
+            while node.data != before_data:
+                if node == None:
+                    print("No before data found!")
+                    return
+                else:
+                    node = node.prev
+
+            # 이 코드를 while문 안에 넣어놔서 마지막 줄에 있는 return 때문에 while문이 한바퀴만 돌아서 개고생함.
+            # 무슨 짓을 해도 무조건 node값이 9로 고정이 되길래 위에 while문이 잘 못된 것만 찾았는데 아니었음.
+            # 역시 코드는 거짓말을 하지 않는다.
+            new = doubleNode(data)
+            before_new = node.prev
+            node.prev = new
+            before_new.next = new
+            new.prev = before_new
+            new.next = node
+            return
+
+
+            
 
 
 print("-----------------DLL Display----------------------")
@@ -151,3 +212,17 @@ DLL1.delete(10)
 DLL1.display()
 DLL1.delete(11)
 
+print("-----------------DLL search_from Test------------------")
+
+DLL1.search_from_top(3)
+DLL1.search_from_bottom(2)
+
+print("-----------------insert Test------------------")
+DLL2 = dnodemngt(0)
+for i in range(1, 11):
+    DLL2.add(i)
+
+DLL2.display()
+
+DLL2.insert_before(1.5, 2)
+DLL2.display()
