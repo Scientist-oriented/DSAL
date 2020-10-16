@@ -40,7 +40,16 @@ class nodemngt:
                     return
                 else:
                     node = node.next
-                
+
+    def search(self, data):
+       node = self.head
+       while node:
+            if node.data == data:
+               print(data)
+               break
+            else:
+                node = node.next
+            
 
 
 # class명을 node라고 했을 때 잘 안되다가 Node 대문자로 바꾸니까 잘 된다.
@@ -48,14 +57,16 @@ class nodemngt:
 
 
 test_list = nodemngt(0)
-test_list.display()
 
 for data in range(1, 10):
     test_list.add(data)
 
 test_list.display()
 print("-----------------------")
-test_list.delete(9)
+test_list.delete(0)
 
 test_list.display()
+
+print("......................")
+test_list.search(5)
 
