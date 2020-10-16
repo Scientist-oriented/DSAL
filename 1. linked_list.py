@@ -189,6 +189,34 @@ class dnodemngt:
             return
 
 
+    def insert_after(self, data, after_data):
+        if self.head == None:
+            print("{} added in the empty list".format(data))
+            self.head = doubleNode(data)
+
+        elif after_data == self.tail.data:
+            temp = self.tail
+            self.tail = doubleNode(data)
+            self.head.prev = temp
+            temp.next = self.tail
+
+        else:
+            node = self.head
+            while node.data != after_data:
+                if node == None:
+                    print("No before data found!")
+                    return
+                else:
+                    node = node.next
+
+            new = doubleNode(data)
+            after_new = node.next
+            node.next = new
+            after_new.prev = new
+            new.prev = node
+            new.next = after_new
+            return
+
             
 
 
@@ -217,12 +245,24 @@ print("-----------------DLL search_from Test------------------")
 DLL1.search_from_top(3)
 DLL1.search_from_bottom(2)
 
-print("-----------------insert Test------------------")
+print("-----------------insert_before Test------------------")
 DLL2 = dnodemngt(0)
 for i in range(1, 11):
     DLL2.add(i)
 
+DLL2.insert_before(1.5, 2)
+DLL2.insert_before(-1, 0)
+DLL2.insert_before(9.5, 10)
 DLL2.display()
 
-DLL2.insert_before(1.5, 2)
-DLL2.display()
+print("-----------------insert_after Test------------------")
+
+DLL3 = dnodemngt(0)
+for i in range(1, 11):
+    DLL3.add(i)
+
+DLL3.insert_after(2.5, 2)
+DLL3.insert_after(0.5, 0)
+DLL3.insert_after(11, 10)
+DLL3.display()
+print(DLL3.tail.data)
