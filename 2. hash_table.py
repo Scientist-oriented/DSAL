@@ -7,7 +7,7 @@ def hash_func(key):
     return key % 10
 
 def hash_key(data):
-    return ord(data[0])
+    return hash(data)
 
 def store_data(data, value):
     key = hash_func(hash_key(data))
