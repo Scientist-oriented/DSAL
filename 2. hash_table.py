@@ -64,7 +64,23 @@ def C_get_data(data):
         for index in range(len(C_hash_table[C_address])):
             if C_hash_table[C_address][index][0] == C_hash_key(data):
                 print(C_hash_table[C_address][index][1])
-                #return
+                break
+
+def C_delete_data(data):
+    C_address = C_hash_func(C_hash_key(data))
+
+    if C_hash_table[C_address] == 0:
+        print("No data can't delete")
+
+    elif len(C_hash_table[C_address]) == 1:
+        C_hash_table[C_address] = 0
+
+    else:
+        for index in range(len(C_hash_table[C_address])):
+            if C_hash_table[C_address][index][0] == C_hash_key(data):
+                del C_hash_table[C_address][index]
+                break
+
 
 print("--------------------Chaining Test------------------------")
 
@@ -80,3 +96,7 @@ print(C_hash_table)
 C_get_data("Andy")
 C_get_data("Dave")
 C_get_data("Cathy")
+
+C_delete_data("Andy")
+
+print(C_hash_table)
