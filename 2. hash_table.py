@@ -37,13 +37,13 @@ def C_hash_key(data):
 
 def C_store_data(data, value):
     C_address = C_hash_func(C_hash_key(data))
-    
+
     if C_hash_table[C_address] != 0:
         for index in range(len(C_hash_table[C_address])):
             if C_hash_table[C_address][index][0] == C_hash_key(data):
                 C_hash_table[C_address][index][1] = value
                 return # 여기 리턴을 써야지 무의미한 for문 실행을 막을 수 있음.
-        
+
         C_hash_table[C_address].append([C_hash_key(data), value]) # 이거를 for문 안에 넣어두면 돌 때마다 append해서 같은 요소가 여러 개 생김
     else:
         C_hash_table[C_address] = [[C_hash_key(data), value]]
@@ -170,3 +170,79 @@ LP_get_data("Cathy")
 LP_delete_data("Andy")
 
 print(LP_hash_table)
+
+
+# hashlib을 활용한 LP기법
+
+import hashlib
+
+HLP_hash_table = [0 for i in range(8)]
+
+def HLP_hash_func(key):
+    return key % 8
+
+def HLP_hash_key(data):
+    hash_object = hashlib.sha256()
+    hash_object.update(data.encode())
+    hex_dig = hash_object.hexdigest()
+    return int(hex_dig, 16)
+
+def HLP_store_data(data, value):
+    HLP_key = hash(data)
+    HLP_address = HLP_hash_func(HLP_key)
+
+    # 주피터 노트에 있는 if문이랑 아래 else문은 없어도 될 것 같음; 어차피 아래 반복문에서 HLP_address부터 돌기 때문
+    for index in range(HLP_address, len(HLP_hash_table)):
+        if HLP_hash_table[index] == 0:
+            HLP_hash_table[index] = [HLP_key, value]
+            return
+        elif HLP_hash_table[index][0] == data:
+            HLP_hash_table[index][1] = value
+            return
+
+def HLP_get_data(data):
+    HLP_key = hash(data)
+    HLP_address = HLP_hash_func(HLP_key)
+
+    for index in range(HLP_address, len(HLP_hash_table)):
+        if HLP_hash_table[index][0] == HLP_key:
+            print(HLP_hash_table[index][1])
+            return
+        elif HLP_hash_table[index] == 0:
+            print("No value for the data")
+            return
+
+def HLP_delete_data(data):
+    HLP_key = hash(data)
+    HLP_address = HLP_hash_func(HLP_key)
+
+    for index in range(HLP_address, len(HLP_hash_table)):
+        if HLP_hash_table[index][0] == HLP_key:
+            HLP_hash_table[index] = 0
+            return
+        elif HLP_hash_table[index] == 0:
+            print("No data Can't delete")
+            return
+
+
+print("--------------------Hashlib HLP Test----------------------")
+
+print(HLP_hash_table)
+
+print(HLP_hash_func(hash("Andy")))
+print(HLP_hash_func(hash("Dave")))
+print(HLP_hash_func(hash("Cathy")))
+
+HLP_store_data("Andy", "English")
+HLP_store_data("Dave", "Math")
+HLP_store_data("Cathy", "Korean")
+
+print(HLP_hash_table)
+
+HLP_get_data("Andy")
+HLP_get_data("Dave")
+HLP_get_data("Cathy")
+
+HLP_delete_data("Andy")
+
+print(HLP_hash_table)
