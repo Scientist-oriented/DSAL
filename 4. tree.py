@@ -38,6 +38,42 @@ class NodeCon:
                 node = node.right
         print("Not Found in the Tree")
 
+    def delete(self, value):
+        
+        # 삭제하려는 node 찾아가는 과정
+        searched = False
+        node = self.head
+        parent_node = self.head
+
+        while node:
+            if node.value == value:
+                searched = True
+                break
+            elif node.value > value:
+                parent_node = node
+                node = node.left
+            else:
+                parent_node = node
+                node = node.right
+
+        if searched = False:
+            print("No data Cannot delete")
+            return False
+
+        # 삭제할 node가 leaf node일 경우
+
+        if node.left == None and node.right == None:
+            if value < parent_node.value:
+                parent_node.left = None
+            else:
+                parent_node.right = None
+
+            del node
+
+        # 삭제할 node가 child를 하나 가지고 있을 경우
+                
+
+
 tree_head = Node(1)
 tree = NodeCon(tree_head)
 
