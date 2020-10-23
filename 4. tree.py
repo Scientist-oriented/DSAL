@@ -67,10 +67,28 @@ class NodeCon:
                 parent_node.left = None
             else:
                 parent_node.right = None
-
             del node
 
         # 삭제할 node가 child를 하나 가지고 있을 경우
+
+        elif node.left == None or node.right == None:
+            if value < parent_node.value:
+                parent_node.left = node.right
+            else:
+                parent_node.right = node.right
+            del node
+
+        # 삭제할 node가 child를 두개 가지고 있는 경우
+
+        else:
+            if value < parent_node.value:
+                sub_node = node.right
+                sub_node_parent = node.right
+                while sub_node.left:
+                    sub_node_parent = sub_node
+                    sub_node = sub_node.left
+                parent_node.left = 
+
                 
 
 
