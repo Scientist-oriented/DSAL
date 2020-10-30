@@ -29,7 +29,14 @@ def read_data(data):
     key = get_key(data)
     address = hash_function(key)
 
-    return hash_table[address]
+    if hash_table[address] == 0:
+        print("No data in the list")
+
+    else:
+        for index in range(len(hash_table[address])):
+            if hash_table[address][index][0] == key:
+                print(hash_table[address][index][1])
+        
 
 save_data("KIm", "Korea")
 save_data("Johnson", "USA")
