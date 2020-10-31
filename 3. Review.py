@@ -36,6 +36,8 @@ def read_data(data):
         for index in range(len(hash_table[address])):
             if hash_table[address][index][0] == key:
                 print(hash_table[address][index][1])
+                return
+        print("No data in the list")
         
 
 save_data("KIm", "Korea")
@@ -44,7 +46,7 @@ save_data("Yamamoto", "Japan")
 
 print(hash_table)
 
-print(read_data("KIm"))
-print(read_data("Johnson"))
-print(read_data("Yamamoto"))
+read_data("KIm")
+read_data("Johnson")
+read_data("Yamamoto")
 
