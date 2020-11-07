@@ -103,7 +103,7 @@ print(a)
 print(b)
 print(c)
 
-"""
+
 
 
 # binary search tree
@@ -237,4 +237,113 @@ while len(delete_nums) != 10:
 for del_num in delete_nums:
     if binary_tree.delete(del_num) == False:
         print('delete failed', del_num)
+
+"""
+# 힙정렬 연습 (Max Heap)
+
+class Heap:
+    def __init__(self, data):
+        self.heap_array = list()
+        self.heap_array.append(None)
+            # 인덱스 번호 계산을 용이하게 하기 위해서 0번 인덱스는 None으로 채움
+        self.heap_array.append(data)
+
+    def move_up(self, inserted_idx):
+        if inserted_idx <= 1:
+            return False
+
+        parent_idx = inserted_idx//2
+        if self.heap_array[inserted_idx] > self.heap_array[parent_idx]:
+            return True
+        else:
+            return False
+
+    def insert(self, data):
+        if len(self.heap_array) == 0:
+            self.heap_array.append(None)
+            self.heap_array.append(data)
+            return True
+
+        self.heap_array.append(data)
+        
+        inserted_idx = len(self.heap_array) - 1
+
+        while self.move_up(inserted_idx):
+            parent_idx = inserted_idx // 2
+            self.heap_array[inserted_idx], self.heap_array[parent_idx] = self.heap_array[parent_idx], self.heap_array[inserted_idx]
+
+            inserted_idx = parent_idx
+
+        return True
+
+    def move_down(self, popped_idx):
+        left_child_idx = popped_idx * 2
+        right_child_idx = popped_idx * 2 + 1
+
+        if left_child_idx >= len(self.heap_array):
+            return False
+
+        elif right_child_idx >= len(self.heap_array):
+            if self.heap_array[left_child_idx] > self.heap_array[popped_idx]:
+                return True
+            else:
+                return False
+
+        else:
+            if self.heap_array[left_child_idx] > self.heap_array[right_child_idx]:
+                if self.heap_array[left_child_idx] > self.heap_array[popped_idx]:
+                    return True
+                else:
+                    return False
+            else:
+                if self.heap_array[right_child_idx] > self.heap_array[popped_idx]:
+                    return True
+                else:
+                    return False
+
+    def pop(self):
+        if len(self.heap_array) <= 1:
+            return False
+
+        returned_data = self.heap_array[1]
+        self.heap_array[1] = self.heap_array[-1]
+        del self.heap_array[-1]
+        popped_idx = 1
+
+        while self.move_down(popped_idx):
+            left_child_idx = popped_idx * 2
+            right_child_idx = popped_idx * 2 + 1
+
+            # 어차피 left child도 없으면 False로 반복문이 돌지 않으므로 여기에 쓸 필요 없음
+            
+            if right_child_idx >= len(self.heap_array):
+                if self.heap_array[popped_idx] < self.heap_array[left_child_idx]:
+                    self.heap_array[popped_idx], self.heap_array[left_child_idx] = self.heap_array[left_child_idx], self.heap_array[popped_idx]
+                    popped_idx = left_child_idx
+
+            else:
+                if self.heap_array[left_child_idx] > self.heap_array[right_child_idx]:
+                    if self.heap_array[left_child_idx] > self.heap_array[popped_idx]:
+                        self.heap_array[popped_idx], self.heap_array[left_child_idx] = self.heap_array[left_child_idx], self.heap_array[popped_idx]
+                        popped_idx = left_child_idx
+                    # 여기도 else가 필요없는 이유는 이미 move_down 함수에도 False처리 되었기 때문                     
+                else:
+                    if self.heap_array[right_child_idx] > self.heap_array[popped_idx]:
+                        self.heap_array[popped_idx], self.heap_array[right_child_idx] = self.heap_array[right_child_idx], self.heap_array[popped_idx]
+                        popped_idx = right_child_idx
+                        
+        return returned_data
+
+
+heap = Heap(15)
+heap.insert(10)
+heap.insert(8)
+heap.insert(5)
+heap.insert(4)
+heap.insert(20)
+print(heap.heap_array)
+a = heap.pop()
+print(a)
+
+print(heap.heap_array)
 
