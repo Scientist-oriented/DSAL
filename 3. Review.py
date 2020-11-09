@@ -347,7 +347,7 @@ print(a)
 
 print(heap.heap_array)
 
-"""
+
 
 # 버블정렬 연습
 
@@ -397,3 +397,88 @@ def insert_sort(data):
 data_list = random.sample(range(100), 10)
 print(selection_sort(data_list))
 
+# 재귀함수 연습
+
+# 팩토리얼 구하는 함수
+
+def factorial(num):
+    if num <=1:
+        return num
+    else:
+        return num * factorial(num - 1)
+
+a = factorial(5)
+print(a)
+
+# 리스트의 총합을 구하는 함수
+
+def list_sum(list):
+    if len(list) == 1:
+        return list[0]
+
+    else:
+        return list[0] + list_sum(list[1:])
+
+list = [1,2,3,4,5,6,7,8,9,10]
+
+b = list_sum(list)
+print(b)
+
+# string이 회문인지 알려주는 함수
+
+def palindrome(string):
+    if len(string) <= 1:
+        return True
+
+    if string[0] == string[-1]:
+        return palindrome(string[1:-1])
+    else:
+        return False
+
+c = palindrome("motor")
+d = palindrome("level")
+
+print(c)
+print(d)
+
+def function(num):
+    print(num)
+    if num == 1:
+        return
+
+    if num % 2 == 1:
+        return function(3*num+1)
+    else:
+        return function(int(num/2))
+
+
+function(3)
+
+def function2(num):
+    if num == 1:
+        return 1
+    if num == 2:
+        return 2
+    if num == 3:
+        return 4
+
+    return function2(num-3) + function2(num-2) + function2(num-1)
+    
+e = function2(5)
+print(e)
+"""
+
+# 동적계획법 연습
+
+def fibo(num):
+    cache = [0 for index in range(num+1)]
+    cache[0] = 0
+    cache[1] = 1
+
+    for index in range(2, num+1):
+        cache[index] = cache[index-2] + cache[index-1]
+
+    return cache[num]
+
+a = fibo(100)
+print(a)
