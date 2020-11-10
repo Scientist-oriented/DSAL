@@ -6,11 +6,12 @@ def sequential_search(data, search):
             return index
     return -1
 
-from random import *
+import random
 
-data_list = sample(range(10), 5)
+data_list = random.sample(range(10), 5)
 print(data_list)
 
 a = sequential_search(data_list, 3)
 
 print(a)
+

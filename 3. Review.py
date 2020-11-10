@@ -466,7 +466,7 @@ def function2(num):
     
 e = function2(5)
 print(e)
-"""
+
 
 # 동적계획법 연습
 
@@ -482,3 +482,314 @@ def fibo(num):
 
 a = fibo(100)
 print(a)
+
+
+
+# 링크드 리스트 연습
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+class NodeCon:
+    def __init__(self, data):
+        self.head = Node(data)
+
+    def insert(self, data):
+        if self.head == None:
+            self.head = Node(data)
+
+        node = self.head
+        while node.next:
+            node = node.next
+
+        node.next = Node(data)
+
+    def display(self):
+        node = self.head
+
+        while node:
+            print(node.data)
+            node = node.next
+
+    def delete(self, data):
+        if self.head == None:
+            print("No data in the List")
+            return
+
+        if self.head.data == data:
+            self.head = self.head.next
+            return
+            
+        node = self.head
+        while node.next.data != data:
+            node = node.next
+
+        node.next = node.next.next
+        return
+
+    def search(self, data):
+        node = self.head
+        while node.next:
+            if node.data == data:
+                print("Data Found in the List")
+                return
+            else:
+                node = node.next
+        print("Data Not Found in the List")
+
+
+L_list = NodeCon(1)
+
+for i in range(2, 11):
+    L_list.insert(i)
+
+L_list.display()
+L_list.delete(10)
+L_list.display()
+L_list.search(1)
+L_list.search(3)
+L_list.search(10)
+
+# 더블 링크드 리스트 연습
+
+class D_Node:
+    def __init__(self, data):
+        self.data = data
+        self.prev = None
+        self.next = None
+
+class D_NodeCon:
+    def __init__(self, data):
+        self.head = D_Node(data)
+        self.tail = self.head
+
+    def insert(self, data):
+        if self.head == None:
+            self.head = D_Node(data)
+            self.tail = D_Node(data)
+
+        node = self.head
+        while node.next:
+            node = node.next
+
+        new = D_Node(data)
+        node.next = new
+        new.prev = node
+        self.tail = new
+
+    def display_from_top(self):
+        print("<Display from top>")
+        node = self.head
+
+        while node:
+            print(node.data)
+            node = node.next
+
+    def display_from_bottom(self):
+        print("<Display from bottom>")
+        node = self.tail
+
+        while node:
+            print(node.data)
+            node = node.prev
+
+    def insert_before(self, data, before):
+        if self.head == None:
+            self.head = D_Node(data)
+            self.tail = self.head
+            print("Data Added in the Empty List")
+
+        elif self.head.data == before:
+            temp = self.head
+            self.head = D_Node(data)
+            self.head.next = temp
+            temp.prev = self.head
+            del temp
+
+        else:
+            node = self.tail
+            while node.data != before:
+                node = node.prev
+                if node == None:
+                    print("Failed to Find Before Data")
+                    return
+
+            new = D_Node(data)
+            node.prev.next = new
+            new.prev = node.prev
+            new.next = node
+            node.prev = new
+
+    def insert_after(self, data, after):
+        if self.head == None:
+            self.head = D_Node(data)
+            self.tail = self.head
+            print("Data Added in the Empty List")
+
+        elif self.tail.data == after:
+            temp = self.tail
+            self.tail = D_Node(data)
+            temp.next = self.tail
+            self.tail.prev = temp
+            del temp
+
+        else:
+            node = self.head
+            while node.data != after:
+                node = node.next
+                if node == None:
+                    print("Failed to Find After Data")
+                    return
+
+            new = D_Node(data)
+            node.next.prev = new
+            new.next = node.next
+            new.prev = node
+            node.next = new
+
+
+
+
+DL_List = D_NodeCon(1)
+for i in range(2, 11):
+    DL_List.insert(i)
+
+DL_List.display_from_top()
+# DL_List.display_from_bottom()
+
+DL_List.insert_before(0.5, 1)
+DL_List.insert_before(2.5, 3)
+DL_List.insert_before(9.5, 10)
+DL_List.display_from_top()
+
+DL_List.insert_after(1.5, 1)
+DL_List.insert_after(3.5, 3)
+DL_List.insert_after(10.5, 10)
+DL_List.display_from_top()
+DL_List.display_from_bottom()
+
+
+
+# 이진탐색 연습
+
+def binary_search(data, search):
+    if len(data) == 1 and data[0] == search:
+        return True
+    
+    if len(data) == 1 and data[0] != search:
+        return False
+
+    if len(data) == 0:
+        return False
+
+    medium = len(data) // 2
+
+    if data[medium] == search:
+        return True
+    else:
+        if data[medium] > search:
+            return binary_search(data[:medium], search)
+        else:
+            return binary_search(data[medium+1:], search)
+
+import random
+data_list = random.sample(range(10), 5)
+data_list.sort()
+print(data_list)
+a = binary_search(data_list, 3)
+print(a)
+
+total_count = 0
+check_count = 0
+function_count = 0
+
+# 이진 탐색을 검증하는 코드
+
+while total_count != 100:
+    data_list = random.sample(range(10), 5)
+    data_list.sort()
+
+
+    if 3 in data_list:
+        check_count += 1
+
+    if binary_search(data_list, 3) == True:
+        function_count += 1
+
+    total_count += 1
+
+print(total_count)
+print(check_count)
+print(function_count)
+
+
+
+# 순차탐색 연습
+
+def sequential(data_list, search):
+    for index in range(len(data_list)):
+        if data_list[index] == search:
+            return index
+
+    return -1
+
+import random
+
+data_list = random.sample(range(10), 5)
+print(data_list)
+
+a = sequential(data_list, 3)
+print(a)
+
+"""
+
+# 해쉬테이블 chaining 복습
+
+hash_table = [0 for i in range(5)]
+print(hash_table)
+
+def get_key(data):
+    return hash(data)
+
+def hash_function(key):
+    return key % 5
+
+def save_data(data, value):
+    key = get_key(data)
+    address = hash_function(key)
+
+    if hash_table[address] == 0:
+        hash_table[address] = [[key, value]]
+
+    else:
+        for index in range(len(hash_table[address])):
+            if hash_table[address][index][0] == key:
+                hash_table[address][index][1] = value
+                return
+        hash_table[address].append([key, value])
+
+def read_data(data):
+    key = get_key(data)
+    address = hash_function(key)
+
+    if hash_table[address] == 0:
+        return False
+    else:
+        for index in range(len(hash_table[address])):
+            if hash_table[address][index][0] == key:
+                return hash_table[address][index][1]
+        return False
+
+save_data("Kim", "Korean")
+save_data("Lee", "History")
+save_data("Moon", "English")
+
+a = read_data("Kim")
+b = read_data("Lee")
+c = read_data("Moon")
+
+print(hash_table)
+
+print(a, b, c)
