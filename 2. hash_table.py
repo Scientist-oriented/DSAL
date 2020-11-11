@@ -246,3 +246,51 @@ HLP_get_data("Cathy")
 HLP_delete_data("Andy")
 
 print(HLP_hash_table)
+
+# 개선된 linear probing
+
+hash_table = [0 for i in range(3)]
+print(hash_table)
+
+def get_key(data):
+    return hash(data)
+
+def hash_function(key):
+    return key % 3
+
+def show_address(data):
+    print(hash(data) % 3)
+
+def save_data(data, value):
+    key = get_key(data)
+    address = hash_function(key)
+
+    if hash_table[address] == 0:
+        hash_table[address] = [key, value]
+
+    else:
+        for index in range(address, len(hash_table)):
+            if hash_table[index] == 0:
+                hash_table[index] = [key, value]
+                return
+            elif hash_table[index][0] == key:
+                hash_table[index][1] = value
+                return
+        for index in range(0, address):
+            if hash_table[index] == 0:
+                hash_table[index] = [key, value]
+                return
+            elif hash_table[index][0] == key:
+                hash_table[index][1] = value
+                return
+        print("Full table")
+
+
+save_data("Kim", "Korean")
+save_data("Lee", "History")
+save_data("Moon", "English")
+save_data("Park", "Social Studies")
+
+show_address("Kim")
+show_address("Lee")
+show_address("Moon")

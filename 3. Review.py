@@ -743,7 +743,7 @@ print(data_list)
 a = sequential(data_list, 3)
 print(a)
 
-"""
+
 
 # 해쉬테이블 chaining 복습
 
@@ -793,3 +793,213 @@ c = read_data("Moon")
 print(hash_table)
 
 print(a, b, c)
+
+
+
+# hash_table linear probing 기법
+
+hash_table = [0 for i in range(3)]
+print(hash_table)
+
+def get_key(data):
+    return hash(data)
+
+def hash_function(key):
+    return key % 3
+
+def show_address(data):
+    print(hash(data) % 3)
+
+def save_data(data, value):
+    key = get_key(data)
+    address = hash_function(key)
+
+    if hash_table[address] == 0:
+        hash_table[address] = [key, value]
+
+    else:
+        for index in range(address, len(hash_table)):
+            if hash_table[index] == 0:
+                hash_table[index] = [key, value]
+                return
+            elif hash_table[index][0] == key:
+                hash_table[index][1] = value
+                return
+        for index in range(0, address):
+            if hash_table[index] == 0:
+                hash_table[index] = [key, value]
+                return
+            elif hash_table[index][0] == key:
+                hash_table[index][1] = value
+                return
+        print("Full table")
+
+
+save_data("Kim", "Korean")
+save_data("Lee", "History")
+save_data("Moon", "English")
+save_data("Park", "Social Studies")
+
+show_address("Kim")
+show_address("Lee")
+show_address("Moon")
+
+
+
+print(hash_table)
+
+
+# 이진탐색 연습
+
+def binary_search(data_list, search):
+    if len(data_list) == 1 and data_list[0] == search:
+        return True
+    
+    if len(data_list) == 1 and data_list[0] != search:
+        return False
+
+    if len(data_list) == 0:
+        return False
+
+    medium = len(data_list) // 2
+
+    if data_list[medium] == search:
+        return True
+    elif data_list[medium] > search:
+        return binary_search(data_list[:medium], search)
+    else:
+        return binary_search(data_list[medium+1:], search)
+
+import random
+data_list = random.sample(range(10), 5)
+data_list.sort()
+print(data_list)
+a = binary_search(data_list, 3)
+print(a)
+
+count1 = 0
+count2 = 0
+total_count = 0
+
+while total_count != 100:
+    data_list = random.sample(range(10), 5)
+    data_list.sort()
+
+    if 3 in data_list:
+        count1 += 1
+
+    if binary_search(data_list, 3) == True:
+        count2 += 1
+
+    total_count += 1
+
+print(count1)
+print(count2)
+
+
+# 순차탐색 연습
+
+def sequential(data_list, search):
+    for index in range(len(data_list)):
+        if data_list[index] == search:
+            return index
+    return -1
+
+import random
+
+data_list = random.sample(range(10), 5)
+print(data_list)
+
+a = sequential(data_list, 3)
+print(a)
+
+
+# 넓이우선탐색 연습
+
+graph = dict()
+
+graph['A'] = ['B', 'C']
+graph['B'] = ['A', 'D']
+graph['C'] = ['A', 'G', 'H', 'I']
+graph['D'] = ['B', 'E', 'F']
+graph['E'] = ['D']
+graph['F'] = ['D']
+graph['G'] = ['C']
+graph['H'] = ['C']
+graph['I'] = ['C', 'J']
+graph['J'] = ['I']
+
+def bfs(graph, start_node):
+    visited = list()
+    need_visit = list()
+
+    need_visit.append(start_node)
+
+    while need_visit:
+        node = need_visit.pop(0)
+        if node not in visited:
+            visited.append(node)
+            need_visit.extend(graph[node])
+
+    return visited
+
+a = bfs(graph, "A")
+print(a)
+
+
+
+# 깊이우선탐색
+
+graph = dict()
+
+graph['A'] = ['B', 'C']
+graph['B'] = ['A', 'D']
+graph['C'] = ['A', 'G', 'H', 'I']
+graph['D'] = ['B', 'E', 'F']
+graph['E'] = ['D']
+graph['F'] = ['D']
+graph['G'] = ['C']
+graph['H'] = ['C']
+graph['I'] = ['C', 'J']
+graph['J'] = ['I']
+
+def dfs(graph, start_node):
+    visited = []
+    need_visit = []
+
+    need_visit.append(start_node)
+
+    while need_visit:
+        node = need_visit.pop()
+
+        if node not in visited:
+            visited.append(node)
+            need_visit.extend(graph[node])
+
+    return visited
+
+a = dfs(graph, "A")
+print(a)
+
+
+# 탐욕알고리즘: 동전문제 연습
+
+coin_list = [1, 100, 50, 500]
+
+def min_coin_count(value, coin_list):
+    coin_list.sort(reverse=True)
+    total_coin_count = 0
+    details = list()
+
+    for coin in coin_list:
+        coin_count = value // coin
+        total_coin_count += coin_count
+        value -= coin * coin_count
+        details.append([coin, coin_count])
+
+    return total_coin_count, details
+
+a = min_coin_count(7777, coin_list)
+print(a)
+
+"""
