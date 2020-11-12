@@ -1002,4 +1002,175 @@ def min_coin_count(value, coin_list):
 a = min_coin_count(7777, coin_list)
 print(a)
 
+
+# 이진탐색트리
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.left = None
+        self.right = None
+
+class NodeCon:
+    def __init__(self, data):
+        self.head = Node(data)
+
+    def insert(self, data):
+        if self.head == None:
+            self.head = Node(data)
+
+        else:
+            node = self.head
+            while True:
+                if data < node.data:
+                    if node.left == None:
+                        node.left = Node(data)
+                        break
+                    else:
+                        node = node.left
+                else:
+                    if node.right == None:
+                        node.right = Node(data)
+                        break
+                    else:
+                        node = node.right
+
+    def search(self, data):
+        node = self.head
+
+        while node:
+            if node.data == data:
+                return True
+            elif node.data > data:
+                node = node.left
+            else:
+                node = node.right
+
+        return False
+
+    def delete(self, data):
+        searched = False
+        node = self.head
+        parent_node = self.head
+
+        while node:
+            if node.data == data:
+                searched = True
+                break
+            elif node.data > data:
+                parent_node = node
+                node = node.left
+            else:
+                parent_node = node
+                node = node.right
+
+        if searched == False:
+            return False
+
+        if node.left == None and node.right == None:
+            if data < parent_node.data:
+                parent_node.left = None
+            else:
+                parent_node.right = None
+
+        elif node.left != None and node.right == None:
+            if data < parent_node.data:
+                parent_node.left = node.left
+            else:
+                parent_node.right = node.left
+
+        elif node.left == None and node.right != None:
+            if data < parent_node.data:
+                parent_node.left = node.right
+            else:
+                parent_node.right = node.right
+
+        else:
+            change_node = node.right
+            change_node_parent = node.right
+            while change_node.left:
+                change_node_parent = change_node
+                change_node = change_node.left
+            if change_node.right != None:
+                change_node_parent.left = change_node.right
+            else:
+                change_node_parent.left = None
+
+            if data < parent_node.data:
+                parent_node.left = change_node
+                change_node.left = node.left
+                change_node.right = node.right
+            else:
+                parent_node.right = change_node
+                change_node.left = node.left
+                change_node.right = node.right
+
+import random
+
+nums = set()
+while len(nums) != 10:
+    nums.add(random.randint(0, 99))
+
+print(nums)
+
+tree = NodeCon(50)
+for node in nums:
+    tree.insert(node)
+
+nums = list(nums)
+del_nums = set()
+while len(del_nums) != 2:
+    del_nums.add(nums[random.randint(0, 9)])
+
+for node in del_nums:
+    tree.delete(node)
+
 """
+
+# 이진탐색 연습
+
+def binary_search(data_list, data):
+    if len(data_list) == 1 and data_list[0] == data:
+        return True
+
+    if len(data_list) == 1 and data_list[0] != data:
+        return False
+
+    if len(data_list) == 0:
+        return False
+
+    medium = len(data_list) // 2
+
+    if data_list[medium] == data:
+        return True
+    elif data_list[medium] > data:
+        return binary_search(data_list[:medium], data)
+    else:
+        return binary_search(data_list[medium+1:], data)
+
+
+import random
+data_list = random.sample(range(10), 5)
+data_list
+data_list.sort()
+print(data_list)
+a = binary_search(data_list, 3)
+print(a)
+
+# 순차탐색연습
+
+def sequential(data_list, data):
+    for index in range(len(data_list)):
+        if data_list[index] == data:
+            return index
+    return -1
+
+import random
+data_list = random.sample(range(10), 5)
+data_list
+print(data_list)
+a = sequential(data_list, 3)
+print(a)
+
+
+
