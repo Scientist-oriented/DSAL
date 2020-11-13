@@ -1125,7 +1125,7 @@ while len(del_nums) != 2:
 for node in del_nums:
     tree.delete(node)
 
-"""
+
 
 # 이진탐색 연습
 
@@ -1174,3 +1174,102 @@ print(a)
 
 
 
+
+# 너비우선탐색
+
+graph = dict()
+
+graph['A'] = ['B', 'C']
+graph['B'] = ['A', 'D']
+graph['C'] = ['A', 'G', 'H', 'I']
+graph['D'] = ['B', 'E', 'F']
+graph['E'] = ['D']
+graph['F'] = ['D']
+graph['G'] = ['C']
+graph['H'] = ['C']
+graph['I'] = ['C', 'J']
+graph['J'] = ['I']
+
+def bfs(graph, start_node):
+    visited = []
+    need_visit = []
+    
+    need_visit.append(start_node)
+
+    while need_visit:
+        node = need_visit.pop(0)
+        if node not in visited:
+            visited.append(node)
+            need_visit.extend(graph[node])
+
+    return visited
+
+a = bfs(graph, "A")
+print(a)
+
+# 깊이우선탐색
+
+def dfs(graph, start_node):
+    visited = list()
+    need_visit = list()
+
+    need_visit.append(start_node)
+
+    while need_visit:
+        node = need_visit.pop()
+        if node not in visited:
+            visited.append(node)
+            need_visit.extend(graph[node])
+
+    return visited
+
+b = dfs(graph, "A")
+print(b)
+
+
+
+# 탐욕알고리즘(동전문제) 연습
+
+coin_list = [1, 200, 50, 500]
+
+
+def min_coin_count(coin_list, value):
+    total_coin_count = 0
+    details = list()
+    coin_list.sort(reverse=True)
+
+    for coin in coin_list:
+        coin_count = value // coin
+        value -= coin_count * coin
+        total_coin_count += coin_count
+        details.append([coin, coin_count])
+
+    return total_coin_count, details
+
+a = min_coin_count(coin_list, 4720)
+print(a)
+
+# 탐욕알고리즘(부분 배낭 문제) 연습
+
+data_list = [(10, 10), (15, 12), (20, 10), (25, 8), (30, 5)]
+
+def max_value(data_list, capacity):
+    data_list = sorted(data_list, key= lambda x: x[1] / x[0], reverse=True)
+    total_value = 0
+    details = list()
+
+    for data in data_list:
+        if capacity >= data[0]:
+            capacity -= data[0]
+            total_value += data[1]
+            details.append([data[0], data[1], 1])
+        else:
+            fraction = capacity / data[0]
+            total_value += fraction * data[1]
+            details.append([data[0], data[1], fraction])
+            break
+    return total_value, details
+
+b = max_value(data_list, 30)
+print(b)
+"""
