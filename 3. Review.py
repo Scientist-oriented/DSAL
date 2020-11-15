@@ -1375,7 +1375,7 @@ print(a)
 
 print(heap.heap_array)
 
-"""
+
 
 # 힙 연습
 
@@ -1477,3 +1477,430 @@ a = heap.pop()
 print(a)
 
 print(heap.heap_array)
+
+
+# 버블정렬
+
+def bubble_sort(data):
+    for index in range(len(data) - 1):
+        swap = False
+        for index2 in range(len(data) - index - 1):
+            if data[index2] > data[index2 + 1]:
+                data[index2], data[index2 + 1] = data[index2 + 1], data[index2]
+                swap = True
+        if swap == False:
+            break
+    return True
+
+import random
+
+data_list = random.sample(range(100), 50)
+print(data_list)
+bubble_sort(data_list)
+print(data_list)
+
+# 삽입정렬
+
+def insertion_sort(data):
+    for index in range(len(data) - 1):
+        for index2 in range(index + 1, 0, -1):
+            if data[index2] < data[index2 - 1]:
+                data[index2], data[index2 - 1] = data[index2 - 1], data[index2]
+            else:
+                break
+    return True
+
+data_list = random.sample(range(100), 50)
+print(data_list)
+insertion_sort(data_list)
+print(data_list)
+
+# 선택정렬
+
+def selection_sort(data):
+    for stand in range(len(data) - 1):
+        lowest = stand
+        for index in range(stand + 1, len(data)):
+            if data[lowest] > data[index]:
+                lowest = index
+        data[lowest], data[stand] = data[stand], data[lowest]
+    return True
+
+data_list = random.sample(range(100), 50)
+print(data_list)
+selection_sort(data_list)
+print(data_list)
+
+
+
+# 너비우선탐색
+
+graph = dict()
+
+graph['A'] = ['B', 'C']
+graph['B'] = ['A', 'D']
+graph['C'] = ['A', 'G', 'H', 'I']
+graph['D'] = ['B', 'E', 'F']
+graph['E'] = ['D']
+graph['F'] = ['D']
+graph['G'] = ['C']
+graph['H'] = ['C']
+graph['I'] = ['C', 'J']
+graph['J'] = ['I']
+
+def bfs(graph, start):
+    visited = []
+    need_visit = []
+    need_visit.append(start)
+
+    while need_visit:
+        node = need_visit.pop(0)
+        if node not in visited:
+            visited.append(node)
+            need_visit.extend(graph[node])
+
+    return visited
+
+a = bfs(graph, "A")
+print(a)
+
+# 깊이우선탐색
+
+def dfs(graph, start):
+    visited = []
+    need_visit = []
+
+    need_visit.append(start)
+
+    while need_visit:
+        node = need_visit.pop()
+        if node not in visited:
+            visited.append(node)
+            need_visit.extend(graph[node])
+
+    return visited
+
+b = dfs(graph, "A")
+print(b)
+
+# 탐욕알고리즘 동전문제 연습
+
+coin_list = [1, 100, 50, 500]
+
+def min_coin_count(coin_list, value):
+    total_coin_count = 0
+    details = []
+    coin_list.sort(reverse=True)
+
+    for coin in coin_list:
+        coin_count = value // coin
+        total_coin_count += coin_count
+        value -= coin * coin_count
+        details.append([coin, coin_count])
+
+    return total_coin_count, details
+
+c = min_coin_count(coin_list, 4720)
+print(c)
+
+# 탐욕알고리즘 가방문제 연습
+
+data_list = [(10, 10), (15, 12), (20, 10), (25, 8), (30, 5)]
+
+def get_max_value(data_list, capacity):
+    total_value = 0
+    details = []
+    data_list = sorted(data_list, key= lambda x: x[1] / x[0], reverse=True)
+
+    for data in data_list:
+        if data[0] <= capacity:
+            total_value += data[1]
+            capacity -= data[0]
+            details.append([data[1], data[0], 1])
+        else:
+            fraction = capacity / data[0]
+            total_value += data[1] * fraction
+            details.append([data[1], data[0], fraction])
+            break
+
+    return total_value, details
+
+d = get_max_value(data_list, 30)
+print(d)
+
+
+# 해쉬테이블 chaining 연습
+
+hash_table = [0 for i in range(5)]
+
+def get_key(data):
+    return hash(data)
+
+def hash_function(key):
+    return key % 5
+
+def save_data(data, value):
+    key = get_key(data)
+    address = hash_function(key)
+
+    if hash_table[address] == 0:
+        hash_table[address] = [[key, value]]
+    else:
+        for index in range(len(hash_table[address])):
+            if hash_table[address][index][0] == key:
+                hash_table[address][index][1] = value
+                return
+        hash_table[address].append([key, value])
+
+def read_data(data):
+    key = get_key(data)
+    address = hash_function(key)
+
+    if hash_table[address] == 0:
+        return False
+    else:
+        for index in range(len(hash_table[address])):
+            if hash_table[address][index][0] == key:
+                return hash_table[address][index][1]
+        return False
+
+save_data("Kim", "Korean")
+save_data("Lee", "History")
+save_data("Moon", "English")
+save_data("Park", "Social Studies")
+
+
+a = read_data("Kim")
+b = read_data("Lee")
+c = read_data("Moon")
+d = read_data("Park")
+print(a, b, c, d)
+print(hash_table)
+
+
+# 해쉬테이블 linear probing 기법
+
+hash_table = [0 for i in range(5)]
+
+def get_key(data):
+    return hash(data)
+
+def hash_function(key):
+    return key % 5
+
+def save_data(data, value):
+    key = get_key(data)
+    address = hash_function(key)
+
+    if hash_table[address] != 0:
+        for index in range(address, len(hash_table)):
+            if hash_table[index] == 0:
+                hash_table[index] = [key, value]
+                return
+            elif hash_table[index][0] == key:
+                hash_table[index][1] = value
+                return
+            
+        for index in range(0, address):
+            if hash_table[index] == 0:
+                hash_table[index] = [key, value]
+                return 
+            elif hash_table[index][0] == key:
+                hash_table[index][1] = value
+                return
+            
+    else:
+        hash_table[address] = [key, value]
+
+def show_address(data):
+    print(data + ":" + str(hash(data) % 5))
+
+def read_data(data):
+    key = get_key(data)
+    address = hash_function(key)
+
+    if hash_table[address] != 0:
+        for index in range(address, len(hash_table)):
+            if hash_table[index] == 0:
+                return None
+            elif hash_table[index][0] == key:
+                return hash_table[index][1]
+        
+        for index in range(0, address):
+            if hash_table[index] == 0:
+                return None
+            if hash_table[index][0] == key:
+                return hash_table[index][1]
+            
+    else:
+        return None
+
+count = 0
+save_error = 0
+read_error = 0
+
+while count != 1000:
+    count +=1
+
+    save_data("Kim", "K")
+    save_data("Lee", "L")
+    save_data("Moon", "M")
+    save_data("Park", "P")
+    save_data("Ahn", "A")
+
+
+    a = read_data("Kim")
+    b = read_data("Lee")
+    c = read_data("Moon")
+    d = read_data("Park")
+    e = read_data("Ahn")
+
+    if 0 in hash_table:
+        save_error += 1
+
+    if a == None or b== None or c == None or d == None or e == None:
+        read_error += 1 
+
+# show_address("Kim")
+# show_address("Lee")
+# show_address("Moon")
+# show_address("Park")
+# show_address("Ahn")
+    
+print(count)
+print(save_error)
+print(read_error)
+
+"""
+
+# 트리 연습
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.left = None
+        self.right = None
+
+class Nodecon:
+    def __init__(self, data):
+        self.head = Node(data)
+
+    def insert(self, data):
+        if self.head == None:
+            self.head = Node(data)
+        else:
+            current_node = self.head
+            while True:
+                if data < current_node.data:
+                    if current_node.left == None:
+                        current_node.left = Node(data)
+                        return
+                    else:
+                        current_node = current_node.left
+                if data > current_node.data:
+                    if current_node.right == None:
+                        current_node.right = Node(data)
+                        return
+                    else:
+                        current_node = current_node.right
+    
+    def search(self, data):
+        current_node = self.head
+        while current_node:
+            if data == current_node.data:
+                return True
+            elif data < current_node.data:
+                current_node = current_node.left
+            else:
+                current_node = current_node.right
+        return False
+
+    def delete(self, data):
+        searched = False
+
+        current_node = self.head
+        parent_node = self.head
+
+        while current_node:
+            if data == current_node.data:
+                searched = True
+                break
+            elif data < current_node.data:
+                parent_node = current_node
+                current_node = current_node.left
+            else:
+                parent_node = current_node
+                current_node = current_node.right
+
+        if searched == False:
+            return False
+
+        if current_node.left == None and current_node.right == None:
+            if data < parent_node.data:
+                parent_node.left = None
+            else:
+                parent_node.right = None
+
+        elif current_node.left != None and current_node.right == None:
+            if data < parent_node.data:
+                parent_node.left = current_node.left
+            else:
+                parent_node.right = current_node.left
+
+        elif current_node.left == None and current_node != None:
+            if data < parent_node.data:
+                parent_node.left = current_node.right
+            else:
+                parent_node.right = current_node.right
+
+        else:
+            change_node = current_node.right
+            change_node_parent = current_node.right
+            while change_node.left:
+                change_node_parent = change_node
+                change_node = change_node.left
+            if change_node.right != None:
+                change_node_parent.left = change_node.right
+            else:
+                change_node_parent.left = None
+           
+            if data < parent_node.data:
+                parent_node.left = change_node
+                change_node.left = current_node.left
+                change_node.right = current_node.right
+            else:
+                parent_node.right = change_node
+                change_node.left = current_node.left
+                change_node.right = current_node.right
+
+
+import random
+# 0 ~ 999 중, 100 개의 숫자 랜덤 선택
+bst_nums = set()
+    # 중복되면 안되니까 중복을 제거해주는 set를 사용
+while len(bst_nums) != 100:
+    bst_nums.add(random.randint(0, 999))
+# print (bst_nums)
+
+# 선택된 100개의 숫자를 이진 탐색 트리에 입력, 임의로 루트노드는 500을 넣기로 함
+
+binary_tree = Nodecon(500)
+for num in bst_nums:
+    binary_tree.insert(num)
+    
+# 입력한 100개의 숫자 검색 (검색 기능 확인)
+for num in bst_nums:
+    if binary_tree.search(num) == False:
+        print ('search failed', num)
+
+# 입력한 100개의 숫자 중 10개의 숫자를 랜덤 선택
+delete_nums = set()
+    # 중복되면 안되니까 set로
+bst_nums = list(bst_nums)
+while len(delete_nums) != 10:
+    delete_nums.add(bst_nums[random.randint(0, 99)])
+
+# 선택한 10개의 숫자를 삭제 (삭제 기능 확인)
+for del_num in delete_nums:
+    if binary_tree.delete(del_num) == False:
+        print('delete failed', del_num)
