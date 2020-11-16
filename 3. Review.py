@@ -1771,7 +1771,7 @@ print(count)
 print(save_error)
 print(read_error)
 
-"""
+
 
 # 트리 연습
 
@@ -1904,3 +1904,534 @@ while len(delete_nums) != 10:
 for del_num in delete_nums:
     if binary_tree.delete(del_num) == False:
         print('delete failed', del_num)
+
+
+
+# 버블정렬연습
+
+def bubble_sort(data):
+    for index in range(len(data) - 1):
+        swap = False
+        for index2 in range(len(data) - index - 1):
+            if data[index2] > data[index2 + 1]:
+                data[index2], data[index2 + 1] = data[index2 + 1], data[index2]
+                swap = True
+        if swap == False:
+            break
+    return data
+
+import random
+
+data_list = random.sample(range(100), 50)
+print (bubble_sort(data_list))
+
+# 삽입정렬 연습
+
+def insert_sort(data):
+    for index in range(len(data) - 1):
+        for index2 in range(index + 1, 0, -1):
+            if data[index2] < data[index2 - 1]:
+                data[index2], data[index2 - 1] = data[index2 - 1], data[index2]
+            else:
+                break
+    return data
+
+data_list = random.sample(range(100), 50)
+print (insert_sort(data_list))
+
+# 선택정렬 연습
+
+def selection_sort(data):
+    for stand in range(len(data) - 1):
+        lowest = stand
+        for index in range(stand + 1, len(data)):
+            if data[lowest] > data[index]:
+                lowest = index
+        data[stand], data[lowest] = data[lowest], data[stand]
+    return data
+
+
+data_list = random.sample(range(100), 50)
+print (selection_sort(data_list))
+
+
+
+# 버블정렬연습
+
+def bubble_sort(data):
+    for index in range(len(data) - 1):
+        swap  = False
+        for index2 in range(len(data) - index - 1):
+            if data[index2] > data[index2 + 1]:
+                data[index2], data[index2 + 1] = data[index2 + 1], data[index2]
+                swap = True
+        if swap == False:
+            break
+    return data
+
+import random
+
+data_list = random.sample(range(100), 50)
+print (bubble_sort(data_list))
+
+# 삽입정렬연습
+
+def insert_sort(data):
+    for index in range(len(data) - 1):
+        for index2 in range(index + 1, 0, -1):
+            if data[index2] < data[index2 - 1]:
+                data[index2], data[index2 - 1] = data[index2 - 1], data[index2]
+    return data
+
+data_list = random.sample(range(100), 50)
+print (insert_sort(data_list))
+
+# 선택정렬
+
+def selection_sort(data):
+    for stand in range(len(data) - 1):
+        lowest = stand
+        for index in range(stand+1, len(data)):
+            if data[lowest] > data[index]:
+                lowest = index
+        data[lowest], data[stand] = data[stand], data[lowest]
+    return data
+
+data_list = random.sample(range(100), 50)
+print (selection_sort(data_list))
+
+
+
+# 탐욕알고리즘 가방문제 연습
+
+data_list = [(10, 10), (15, 12), (20, 10), (25, 8), (30, 5)]
+
+def max_value(data_list, capacity):
+    data = sorted(data_list, key=lambda x: x[1] / x[0], reverse=True)
+    total_value = 0
+    details = []
+
+    for data in data_list:
+        if data[0] < capacity:
+            total_value += data[1]
+            capacity -= data[0]
+            details.append([data[0], data[1], 1])
+        else:
+            fraction = capacity / data[0]
+            total_value += data[1] * fraction
+            details.append([data[0], data[1], fraction])
+            break
+    return total_value, details
+
+a = max_value(data_list, 30)
+
+print(a)
+            
+
+
+# 다익스트라 알고리즘 복습
+
+mygraph = {
+    'A': {'B': 8, 'C': 1, 'D': 2},
+    'B': {},
+    'C': {'B': 5, 'D': 2},
+    'D': {'E': 3, 'F': 5},
+    'E': {'F': 1},
+    'F': {'A': 5}
+}
+
+import heapq
+
+def dijkstra(graph, start):
+    distances = {node: float('inf') for node in graph}
+    distances[start] = 0
+    queue = []
+    heapq.heappush(queue, [distances[start], start])
+
+    while queue:
+        current_distance, current_node = heapq.heappop(queue)
+
+        if distances[current_node] < current_distance:
+            continue
+
+        for adjacent, weight in graph[current_node].items():
+            distance = current_distance + weight
+
+            if distance < distances[adjacent]:
+                distances[adjacent] = distance
+                heapq.heappush(queue, [distance, adjacent])
+
+    return distances
+
+print(dijkstra(mygraph, "A"))
+
+
+
+# 다익스트라 알고리즘 연습
+
+mygraph = {
+    'A': {'B': 8, 'C': 1, 'D': 2},
+    'B': {},
+    'C': {'B': 5, 'D': 2},
+    'D': {'E': 3, 'F': 5},
+    'E': {'F': 1},
+    'F': {'A': 5}
+}
+
+import heapq
+
+def dijkstra(graph, start):
+    distances = {node: float('inf') for node in graph}
+    distances[start] = 0
+    queue = []
+    heapq.heappush(queue, [distances[start], start])
+
+    while queue:
+        current_distance, current_node = heapq.heappop(queue)
+
+        if current_distance > distances[current_node]:
+            continue
+
+        for adjacent, weight in graph[current_node].items():
+            distance = weight + current_distance
+
+            if distance < distances[adjacent]:
+                distances[adjacent] = distance
+                heapq.heappush(queue, [distance, adjacent])
+
+    return distances
+
+print(dijkstra(mygraph, 'A'))
+
+
+
+# 크루스칼 알고리즘 연습
+
+mygraph = {
+    'vertices': ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+    'edges': [
+        (7, 'A', 'B'),
+        (5, 'A', 'D'),
+        (7, 'B', 'A'),
+        (8, 'B', 'C'),
+        (9, 'B', 'D'),
+        (7, 'B', 'E'),
+        (8, 'C', 'B'),
+        (5, 'C', 'E'),
+        (5, 'D', 'A'),
+        (9, 'D', 'B'),
+        (7, 'D', 'E'),
+        (6, 'D', 'F'),
+        (7, 'E', 'B'),
+        (5, 'E', 'C'),
+        (7, 'E', 'D'),
+        (8, 'E', 'F'),
+        (9, 'E', 'G'),
+        (6, 'F', 'D'),
+        (8, 'F', 'E'),
+        (11, 'F', 'G'),
+        (9, 'G', 'E'),
+        (11, 'G', 'F')
+    ]
+}
+
+parent = dict()
+rank = dict()
+
+def find(node):
+    if parent[node] != node:
+        parent[node] = find(parent[node])
+    return parent[node]
+
+def union(node_v, node_u):
+    root1 = find(node_v)
+    root2 = find(node_u)
+
+    if rank[root1] > rank[root2]:
+        parent[root2] = root1
+    else:
+        parent[root1] = root2
+        if rank[root1] == rank[root2]:
+            rank[root2] += 1
+
+def make_set(node):
+    parent[node] = node
+    rank[node] = 0
+
+def kruskal(graph):
+    mst = list()
+
+    for node in graph['vertices']:
+        make_set(node)
+
+    edges = graph['edges']
+    edges.sort()
+
+    for edge in edges:
+        weight, node_v, node_u = edge
+        if find(node_v) != find(node_u):
+            union(node_v, node_u)
+            mst.append(edge)
+
+    return mst
+
+print(kruskal(mygraph))
+
+
+
+# 크루스칼 알고리즘 연습
+
+mygraph = {
+    'vertices': ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+    'edges': [
+        (7, 'A', 'B'),
+        (5, 'A', 'D'),
+        (7, 'B', 'A'),
+        (8, 'B', 'C'),
+        (9, 'B', 'D'),
+        (7, 'B', 'E'),
+        (8, 'C', 'B'),
+        (5, 'C', 'E'),
+        (5, 'D', 'A'),
+        (9, 'D', 'B'),
+        (7, 'D', 'E'),
+        (6, 'D', 'F'),
+        (7, 'E', 'B'),
+        (5, 'E', 'C'),
+        (7, 'E', 'D'),
+        (8, 'E', 'F'),
+        (9, 'E', 'G'),
+        (6, 'F', 'D'),
+        (8, 'F', 'E'),
+        (11, 'F', 'G'),
+        (9, 'G', 'E'),
+        (11, 'G', 'F')
+    ]
+}
+
+parent = dict()
+rank = dict()
+
+def find(node):
+    if parent[node] != node:
+        parent[node] = find(parent[node])
+    return parent[node]
+
+def union(node_v, node_u):
+    root1 = find(node_v)
+    root2 = find(node_u)
+
+    if rank[root1] > rank[root2]:
+        parent[root2] = root1
+    else:
+        parent[root1] = root2
+        if rank[root1] == rank[root2]:
+            rank[root2] += 1
+
+def make_set(node):
+    parent[node] = node
+    rank[node] = 0
+
+def kruskal(graph):
+    mst = list()
+
+    for node in graph["vertices"]:
+        make_set(node)
+
+    edges = graph['edges']
+    edges.sort()
+
+    for edge in edges:
+        weight, node_v, node_u = edge
+
+        if find(node_u) != find(node_v):
+            union(node_u, node_v)
+            mst.append(edge)
+
+    return mst
+
+print(kruskal(mygraph))
+
+
+
+# 힙 연습 (최소힙)
+
+class Heap:
+    def __init__(self, data):
+        self.heap_array = list()
+        self.heap_array.append(None)
+        self.heap_array.append(data)
+
+    def move_up(self, inserted_idx):
+        if inserted_idx <= 1:
+            return False
+
+        parent_idx = inserted_idx // 2
+
+        if self.heap_array[parent_idx] > self.heap_array[inserted_idx]:
+            return True
+        else:
+            return False
+
+    def insert(self, data):
+        if len(self.heap_array) == 1:
+            self.heap_array.append(data)
+            return True
+
+        self.heap_array.append(data)
+        inserted_idx = len(self.heap_array) - 1
+
+        
+
+        while self.move_up(inserted_idx):
+            parent_idx = inserted_idx // 2
+            self.heap_array[parent_idx], self.heap_array[inserted_idx] = self.heap_array[inserted_idx], self.heap_array[parent_idx]
+            inserted_idx = parent_idx
+
+        return True
+
+    def move_down(self, popped_idx):
+        left_child_idx = 2 * popped_idx
+        right_child_idx = 2 * popped_idx + 1
+
+        if left_child_idx >= len(self.heap_array):
+            return False
+        elif right_child_idx >= len(self.heap_array):
+            if self.heap_array[popped_idx] > self.heap_array[left_child_idx]:
+                return True
+            else:
+                return False
+        else:
+            if self.heap_array[left_child_idx] < self.heap_array[right_child_idx]:
+                if self.heap_array[popped_idx] > self.heap_array[left_child_idx]:
+                    return True
+                else:
+                    return False
+            else:
+                if self.heap_array[popped_idx] > self.heap_array[right_child_idx]:
+                    return True
+                else:
+                    return False
+
+    def pop(self):
+        if len(self.heap_array) <= 1:
+            return False
+
+        returned_data = self.heap_array[1]
+        self.heap_array[1], self.heap_array[-1] = self.heap_array[-1], self.heap_array[1]
+        del self.heap_array[-1]
+        popped_idx = 1
+
+        
+
+        while self.move_down(popped_idx):
+            left_child_idx = 2 * popped_idx
+            right_child_idx = 2 * popped_idx + 1
+
+            if right_child_idx >= len(self.heap_array):
+                if self.heap_array[popped_idx] > self.heap_array[left_child_idx]:
+                    self.heap_array[popped_idx], self.heap_array[left_child_idx] = self.heap_array[left_child_idx], self.heap_array[popped_idx]
+                    popped_idx = left_child_idx
+            else:
+                if self.heap_array[left_child_idx] < self.heap_array[right_child_idx]:
+                    if self.heap_array[popped_idx] > self.heap_array[left_child_idx]:
+                        self.heap_array[popped_idx], self.heap_array[left_child_idx] = self.heap_array[left_child_idx], self.heap_array[popped_idx]
+                        popped_idx = left_child_idx
+                else:
+                    if self.heap_array[popped_idx] > self.heap_array[right_child_idx]:
+                        self.heap_array[popped_idx], self.heap_array[right_child_idx] = self.heap_array[right_child_idx], self.heap_array[popped_idx]
+                        popped_idx = right_child_idx
+
+        return returned_data
+                    
+heap = Heap(15)
+heap.insert(10)
+heap.insert(8)
+heap.insert(5)
+heap.insert(4)
+heap.insert(20)
+print(heap.heap_array)
+
+a = heap.pop()
+print(a)
+
+print(heap.heap_array)
+b = heap.pop()
+print(b)
+print(heap.heap_array)
+
+heap.insert(1)
+c = heap.heap_array
+print(c)
+
+"""
+
+# 링크드 리스트 연습
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+class NodeCon:
+    def __init__(self, data):
+        self.head = Node(data)
+
+    def insert(self, data):
+        if self.head == None:
+            self.head = Node(data)
+            return 
+
+        node = self.head
+        while node.next:
+            node = node.next
+
+        node.next = Node(data)
+
+    def display(self):
+        node = self.head
+
+        while node:
+            print(node.data)
+            node = node.next
+
+    def delete(self, data):
+        if self.head == None:
+            return False
+
+        if data == self.head.data:
+            self.head = self.head.next
+        
+        else:
+            node = self.head
+
+            while node.next.data != data:
+                node = node.next
+
+            node.next = node.next.next
+
+        return
+
+    def search(self, data):
+        node = self.head
+        while node.next:
+            if node.data == data:
+                return True
+            else:
+                node = node.next
+
+        return False
+            
+
+List = NodeCon(1)
+
+for index in range(2, 11):
+    List.insert(index)
+
+List.display()
+
+for index in [3, 6, 9]:
+    List.delete(index)
+
+List.display()
+
