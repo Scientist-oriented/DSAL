@@ -2364,7 +2364,7 @@ heap.insert(1)
 c = heap.heap_array
 print(c)
 
-"""
+
 
 # 링크드 리스트 연습
 
@@ -2434,4 +2434,331 @@ for index in [3, 6, 9]:
     List.delete(index)
 
 List.display()
+
+
+
+# 더블링크드 리스트 연습
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.prev = None
+        self.next = None
+
+class NodeCon:
+    def __init__(self, data):
+        self.head = Node(data)
+        self.tail = self.head
+
+    def insert(self, data):
+        if self.head == None:
+            self.head = Node(data)
+            self.tail = self.head
+        
+        else:
+            temp = self.tail
+            self.tail = Node(data)
+            temp.next = self.tail
+            self.tail.prev = temp
+            del temp
+    
+    def display(self):
+        node = self.head
+        while node:
+            print(node.data)
+            node = node.next
+
+    def insert_before(self, data, before):
+        if before == self.head.data:
+            new = Node(data)
+            self.head.prev = new
+            new.next = self.head
+            self.head = new
+        else:
+            before_node = self.tail
+            while before_node.data != before:
+                before_node = before_node.prev
+                if before_node == None:
+                    return False
+
+            new = Node(data)
+
+            before_new = before_node.prev
+            before_new.next = new
+            new.prev = before_node.prev
+            new.next = before_node
+            before_new = new
+
+    def insert_after(self, data, after):
+        if after == self.tail.data:
+            new = Node(data)
+            self.tail.next = new
+            new.prev = self.tail
+            self.tail = new
+
+        else:
+            after_node = self.head
+            while after_node.data != after:
+                after_node = after_node.next
+                if after_node == None:
+                    return False
+
+            new = Node(data)
+            after_new = after_node.next
+
+            after_node.next = new
+            new.prev = after_node
+            new.next = after_new
+            after_new.prev = new
+    
+    def delete(self, data):
+        if data == self.head.data:
+            self.head = self.head.next
+            self.head.prev = None
+
+        elif data == self.tail.data:
+            self.tail = self.tail.prev
+            self.tail.next = None
+
+        else:
+            before_node = self.head
+            while before_node.next.data != data:
+                before_node = before_node.next
+                if before_node.next == None:
+                    return False
+
+            after_node = before_node.next.next
+            before_node.next = after_node
+            after_node.prev = before_node
+        
+
+
+List = NodeCon(1)
+
+for index in range(2, 11):
+    List.insert(index)
+
+List.display()
+
+List.insert_before(0.5, 1)
+List.insert_before(3.5, 4)
+List.insert_after(4.5, 4)
+List.insert_after(10.5, 10)
+List.display()
+print("Head: " + str(List.head.data))
+print("Tail: " + str(List.tail.data))
+
+List.delete(0.5)
+List.delete(10.5)
+List.delete(3.5)
+List.delete(4.5)
+List.display()
+
+print("Head: " + str(List.head.data))
+print("Tail: " + str(List.tail.data))
+
+
+
+# 병합정렬 연습
+
+def merge_sort(data):
+    if len(data) <= 1:
+        return data
+    
+    medium = int(len(data) // 2)
+
+    left = merge_sort(data[:medium])
+    right = merge_sort(data[medium:])
+
+    return merge(left, right)
+
+def merge(left, right):
+    merged = list()
+    left_point, right_point = 0, 0
+
+    while len(left) > left_point and len(right) > right_point:
+        if left[left_point] < right[right_point]:
+            merged.append(left[left_point])
+            left_point += 1
+        else:
+            merged.append(right[right_point])
+            right_point += 1
+
+    while len(left) > left_point:
+        merged.append(left[left_point])
+        left_point += 1
+
+    while len(right) > right_point:
+        merged.append(right[right_point])
+        right_point += 1
+
+    return merged
+
+import random
+
+data_list = random.sample(range(100), 10)
+a = merge_sort(data_list)
+print(a)
+
+
+
+# 병합정렬 연습
+
+def merge_sort(data):
+    if len(data) <= 1:
+        return data
+
+    medium = int(len(data)//2)
+
+    left = merge_sort(data[:medium])
+    right = merge_sort(data[medium:])
+
+    return merge(left, right)
+
+def merge(left, right):
+    merged = list()
+    left_point, right_point = 0, 0
+
+    while len(left) > left_point and len(right) > right_point:
+        if left[left_point] < right[right_point]:
+            merged.append(left[left_point])
+            left_point += 1
+        else:
+            merged.append(right[right_point])
+            right_point += 1
+
+    while len(left) > left_point:
+        merged.append(left[left_point])
+        left_point += 1
+
+    while len(right) > right_point:
+        merged.append(right[right_point])
+        right_point += 1
+
+    return merged
+
+    
+import random
+
+data_list = random.sample(range(100), 10)
+a = merge_sort(data_list)
+print(a)
+
+
+
+# 퀵정렬
+
+def qsort(data):
+    if len(data) <= 1:
+        return data
+
+    left, right = list(), list()
+    pivot = data[0]
+
+    for index in range(1, len(data)):
+        if pivot > data[index]:
+            left.append(data[index])
+        else:
+            right.append(data[index])
+
+    return qsort(left) + [pivot] + qsort(right)
+
+
+
+def qsort(data):
+    if len(data) <= 1:
+        return data
+
+    pivot = data[0]
+    left = [item for item in data[1:] if item < pivot]
+    right = [item for item in data[1:] if item >= pivot]
+
+    return qsort(left) + [pivot] + qsort(right)
+
+import random
+
+data_list = random.sample(range(100), 10)
+
+a = qsort(data_list)
+print(a)
+
+
+
+# 재귀함수 팩토리얼
+
+def factorial(num):
+    if num <= 1:
+        return num
+
+    return num * factorial(num - 1)
+
+a = factorial(5)
+print(a)
+
+
+
+# 재귀함수 리스트의 합
+
+def list_sum(list):
+    if len(list) <= 1:
+        return list[0]
+
+    return list[0] + list_sum(list[1:])
+
+list = [1, 2, 3]
+a = list_sum(list)
+print(a)
+
+
+
+# 재귀함수 회문
+
+def palindrome(string):
+    if len(string) <= 1:
+        return True
+
+    if string[0] == string[-1]:
+        return palindrome(string[1:-1])
+    else:
+        return False
+
+a = palindrome("motor")
+b = palindrome("level")
+print(a, b)
+
+
+
+# 재귀함수 짝수홀수
+
+def func(n):
+    if n == 1:
+        print(n)
+        return
+
+    if n % 2 == 1:
+        print(n)
+        return func(3 * n + 1)
+
+    if n % 2 == 0:
+        print(n)
+        return func(int(n/2))
+
+func(3)
+
+"""
+# 동적프로그래밍
+
+def fibo(num):
+    cache = [0 for i in range(num+1)]
+
+    cache[0] = 0
+    cache[1] = 1
+
+    for index in range(2, num+1):
+        cache[index] = cache[index - 2] + cache[index - 1]
+
+    return cache[num]
+
+a = fibo(10)
+print(a)
 
