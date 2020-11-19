@@ -3002,5 +3002,413 @@ def dijkstra(graph, start):
 a = dijkstra(mygraph, "A")
 print(a)
 
-"""
 
+
+# 트리 연습
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.left = None
+        self.right = None
+
+class Nodecon:
+    def __init__(self, head):
+        self.head = head
+
+    def insert(self, data):
+        if self.head == None:
+            self.head = Node(data)
+        
+        node = self.head
+        while True:
+            if node.data > data:
+                if node.left == None:
+                    node.left = Node(data)
+                    break
+                else:
+                    node = node.left
+            else:
+                if node.right == None:
+                    node.right = Node(data)
+                    break
+                else:
+                    node = node.right
+
+    def search(self, data):
+        node = self.head
+
+        while node:
+            if node.data == data:
+                return True
+            elif node.data > data:
+                node = node.left
+            else:
+                node = node.right
+
+        return False
+
+    def delete(self, data):
+        searched = False
+
+        node = self.head
+        parent_node = self.head
+
+        while node:
+            if node.data == data:
+                searched = True
+                break
+            elif node.data > data:
+                parent_node = node
+                node = node.left
+            else:
+                parent_node = node
+                node = node.right
+
+        if searched == False:
+            return False
+            
+        if node.left == None and node.right == None:
+            if parent_node.data > node.data:
+                parent_node.left = None
+            else:
+                parent_node.right = None
+        
+        elif node.left != None and node.right == None:
+            if parent_node.data > node.data:
+                parent_node.left = node.left
+            else:
+                parent_node.right = node.left
+
+        elif node.left == None and node.right != None:
+            if parent_node.data > node.data:
+                parent_node.left = node.right
+            else:
+                parent_node.right = node.right
+            
+        else:
+            if parent_node.data > node.data:
+                change_node = node.right
+                change_node_parent = node.right
+                while change_node.left:
+                    change_node_parent = change_node
+                    change_node = change_node.left
+                if change_node.right == None:
+                    change_node_parent.left = None
+                else:
+                    change_node_parent.left = change_node.right
+
+                parent_node.left = change_node
+                change_node.left = node.left
+                change_node.right = node.right
+
+            else:
+                change_node = node.right
+                change_node_parent = node.right
+                while change_node.left:
+                    change_node_parent = change_node
+                    change_node = change_node.left
+                if change_node.right == None:
+                    change_node_parent.left = None
+                else:
+                    change_node_parent.left = change_node.right
+
+                parent_node.right = change_node
+                change_node.left = node.left
+                change_node.right = node.right
+
+        return True
+
+import random
+
+# bst_nums = set()
+
+# while len(bst_nums) != 100:
+#     bst_nums.add(random.randint(0, 999))
+
+bst_nums = [1, 2, 3, 4, 6, 7, 8, 9, 10]
+head = Node(5)
+binary_tree = Nodecon(head)
+for num in bst_nums:
+    binary_tree.insert(num)
+
+for num in bst_nums:
+    if binary_tree.search(num) != False:
+        print("Found", num)
+
+delete_nums = set()
+bst_nums = list(bst_nums)
+while len(delete_nums) != 5:
+    delete_nums.add(bst_nums[random.randint(0, 8)])
+
+print(delete_nums)
+delete_nums = list(delete_nums)
+for del_num in delete_nums:
+    if binary_tree.delete(del_num) == False:
+        print('delete failed', del_num)
+    else:
+        print('delete successed', del_num)
+# success_count = 0
+# fail_count = 0
+# for del_num in delete_nums:
+#     if binary_tree.delete(del_num) != False:
+#         success_count += 1
+#     else:
+#         fail_count += 1
+
+# print(success_count, fail_count)
+
+
+# 크루스칼 알고리즘
+
+mygraph = {
+    'vertices': ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+    'edges': [
+        (7, 'A', 'B'),
+        (5, 'A', 'D'),
+        (7, 'B', 'A'),
+        (8, 'B', 'C'),
+        (9, 'B', 'D'),
+        (7, 'B', 'E'),
+        (8, 'C', 'B'),
+        (5, 'C', 'E'),
+        (5, 'D', 'A'),
+        (9, 'D', 'B'),
+        (7, 'D', 'E'),
+        (6, 'D', 'F'),
+        (7, 'E', 'B'),
+        (5, 'E', 'C'),
+        (7, 'E', 'D'),
+        (8, 'E', 'F'),
+        (9, 'E', 'G'),
+        (6, 'F', 'D'),
+        (8, 'F', 'E'),
+        (11, 'F', 'G'),
+        (9, 'G', 'E'),
+        (11, 'G', 'F')
+    ]
+}
+
+parent = dict()
+rank = dict()
+
+def find(node):
+    if parent[node] != node:
+        parent[node] = find(parent[node])
+    return parent[node]
+
+def union(node_v, node_u):
+    root1 = find(node_v)
+    root2 = find(node_u)
+
+    if rank[root1] > rank[root2]:
+        parent[root2] = root1
+    else:
+        parent[root1] = root2
+        if rank[root1] == rank[root2]:
+            rank[root2] += 1
+
+def make_set(node):
+    parent[node] = node
+    rank[node] = 0
+
+def kruskal(graph):
+    mst = list()
+
+    for node in graph["vertices"]:
+        make_set(node)
+
+    edges = graph["edges"]
+    edges.sort()
+
+    for edge in edges:
+        weight, node_v, node_u = edge
+        if find(node_v) != find(node_u):
+            union(node_v, node_u)
+            mst.append(edge)
+
+    return mst
+
+a = kruskal(mygraph)
+print(a)
+
+
+
+# 크루스칼 알고리즘
+
+mygraph = {
+    'vertices': ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+    'edges': [
+        (7, 'A', 'B'),
+        (5, 'A', 'D'),
+        (7, 'B', 'A'),
+        (8, 'B', 'C'),
+        (9, 'B', 'D'),
+        (7, 'B', 'E'),
+        (8, 'C', 'B'),
+        (5, 'C', 'E'),
+        (5, 'D', 'A'),
+        (9, 'D', 'B'),
+        (7, 'D', 'E'),
+        (6, 'D', 'F'),
+        (7, 'E', 'B'),
+        (5, 'E', 'C'),
+        (7, 'E', 'D'),
+        (8, 'E', 'F'),
+        (9, 'E', 'G'),
+        (6, 'F', 'D'),
+        (8, 'F', 'E'),
+        (11, 'F', 'G'),
+        (9, 'G', 'E'),
+        (11, 'G', 'F')
+    ]
+}
+
+parent = dict()
+rank = dict()
+
+def find(node):
+    if parent[node] != node:
+        parent[node] = find(parent[node])
+    return parent[node]
+
+def union(node_v, node_u):
+    root1 = find(node_v)
+    root2 = find(node_u)
+
+    if rank[root1] > rank[root2]:
+        parent[root2] = root1
+    else:
+        parent[root1] = root2
+        if rank[root1] == rank[root2]:
+            rank[root2] += 1
+
+def make_set(node):
+    parent[node] = node
+    rank[node] = 0
+
+def kruskal(graph):
+    mst = []
+
+    for node in graph["vertices"]:
+        make_set(node)
+
+    edges = graph["edges"]
+    edges.sort()
+
+    for edge in edges:
+        weight, node_v, node_u = edge
+
+        if find(node_v) != find(node_u):
+            union(node_u, node_v)
+            mst.append(edge)
+
+    return mst
+
+a = kruskal(mygraph)
+print(a)
+
+
+
+# 최소 힙복습
+
+class Heap:
+    def __init__(self, data):
+        self.heap_array = list()
+        self.heap_array.append(None)
+        self.heap_array.append(data)
+
+    def move_up(self, inserted_idx):
+        if inserted_idx <= 1:
+            return False
+
+        parent_idx = inserted_idx // 2
+
+        if self.heap_array[inserted_idx] < self.heap_array[parent_idx]:
+            return True
+        else:
+            return False
+
+    def insert(self, data):
+        if len(self.heap_array) == 1:
+            self.heap_array.append(data)
+        else:
+            self.heap_array.append(data)
+            inserted_idx = len(self.heap_array) - 1
+
+            while self.move_up(inserted_idx):
+                parent_idx = inserted_idx // 2
+                self.heap_array[inserted_idx], self.heap_array[parent_idx] = self.heap_array[parent_idx], self.heap_array[inserted_idx]
+                inserted_idx = parent_idx
+                
+    def pop(self):
+        returned_data = self.heap_array[1]
+        self.heap_array[1], self.heap_array[-1] = self.heap_array[-1], self.heap_array[1]
+        del self.heap_array[-1]
+
+        popped_idx = 1
+
+        while self.move_down(popped_idx):
+            left_child_idx = 2 * popped_idx
+            right_child_idx = 2 * popped_idx + 1
+
+            
+            if right_child_idx >= len(self.heap_array):
+                if self.heap_array[left_child_idx] < self.heap_array[popped_idx]:
+                    self.heap_array[left_child_idx], self.heap_array[popped_idx] = self.heap_array[popped_idx], self.heap_array[left_child_idx]
+                    popped_idx = left_child_idx
+            else:
+                if self.heap_array[left_child_idx] < self.heap_array[right_child_idx]:
+                    if self.heap_array[left_child_idx] < self.heap_array[popped_idx]:
+                        self.heap_array[left_child_idx], self.heap_array[popped_idx] = self.heap_array[popped_idx], self.heap_array[left_child_idx]
+                        popped_idx = left_child_idx
+                else:
+                    if self.heap_array[right_child_idx] < self.heap_array[popped_idx]:
+                        self.heap_array[right_child_idx], self.heap_array[popped_idx] = self.heap_array[popped_idx], self.heap_array[right_child_idx]
+                        popped_idx = right_child_idx
+
+        return returned_data
+
+    def move_down(self, popped_idx):
+        left_child_idx = 2 * popped_idx
+        right_child_idx = 2 * popped_idx + 1
+
+        if left_child_idx >= len(self.heap_array):
+            return False
+        elif right_child_idx >= len(self.heap_array):
+            if self.heap_array[left_child_idx] < self.heap_array[popped_idx]:
+                return True
+            else:
+                return False
+        else:
+            if self.heap_array[left_child_idx] < self.heap_array[right_child_idx]:
+                if self.heap_array[left_child_idx] < self.heap_array[popped_idx]:
+                    return True
+                else:
+                    return False
+            else:
+                if self.heap_array[right_child_idx] < self.heap_array[popped_idx]:
+                    return True
+                else:
+                    return False
+
+
+heap = Heap(15)
+heap.insert(10)
+heap.insert(8)
+heap.insert(5)
+heap.insert(4)
+heap.insert(20)
+print(heap.heap_array)
+print(heap.pop())
+print(heap.heap_array)
+print(heap.pop())
+print(heap.heap_array)
+print(heap.pop())
+print(heap.heap_array)
+print(heap.pop())
+print(heap.heap_array)
+print(heap.pop())
+print(heap.heap_array)
+
+"""
