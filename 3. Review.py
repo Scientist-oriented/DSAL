@@ -3411,4 +3411,239 @@ print(heap.heap_array)
 print(heap.pop())
 print(heap.heap_array)
 
+
+
+# 버블정렬
+
+def bubble_sort(data):
+    for index in range(len(data) - 1):
+        swap = False
+        for index2 in range(0, len(data)-index-1):
+            if data[index2 + 1] < data[index2]:
+                data[index2], data[index2 + 1] = data[index2 + 1], data[index2]
+                swap = True
+        if swap == False:
+            break
+    return data
+
+import random
+
+Testlist = random.sample(range(100), 50)
+print(Testlist)
+
+bubble_sort(Testlist)
+print(Testlist)
+
+
+# 삽입정렬
+
+def insertion_sort(data):
+    for index in range(0, len(data) - 1):
+        for index2 in range(index + 1, 0, -1):
+            if data[index2] < data[index2 - 1]:
+                data[index2], data[index2 - 1] = data[index2 - 1], data[index2]
+            else:
+                break
+    return data
+
+import random
+
+Testlist = random.sample(range(100), 50)
+print(Testlist)
+
+insertion_sort(Testlist)
+print(Testlist)
+
+
+
+
+# 선택정렬
+
+def selection_sort(data):
+    for stand in range(len(data) - 1):
+        lowest = stand
+        for index in range(stand+1, len(data)):
+            if data[lowest] > data[index]:
+                lowest = index
+        data[stand], data[lowest] = data[lowest], data[stand]
+    return data
+
+import random
+
+Testlist = random.sample(range(100), 50)
+print(Testlist)
+
+selection_sort(Testlist)
+print(Testlist)
+
+
+
+# 병합정렬
+
+def merge_sort(data):
+    if len(data) <= 1:
+        return data
+
+    medium = int(len(data) / 2)
+    left = merge_sort(data[:medium])
+    right = merge_sort(data[medium:])
+
+    return merge(left, right)
+
+def merge(left, right):
+    left_point = 0
+    right_point = 0
+    merged = []
+
+    while len(left) > left_point and len(right) > right_point:
+        if left[left_point] < right[right_point]:
+            merged.append(left[left_point])
+            left_point += 1
+        else:
+            merged.append(right[right_point])
+            right_point += 1
+
+    while len(left) > left_point:
+        merged.append(left[left_point])
+        left_point += 1
+
+    while len(right) > right_point:
+        merged.append(right[right_point])
+        right_point += 1
+
+    return merged
+
+import random
+
+Testlist = random.sample(range(100), 50)
+print(Testlist)
+
+a = merge_sort(Testlist)
+print(a)
+
+
+
+# 퀵소트
+
+def quick_sort(data):
+    if len(data) <= 1:
+        return data
+
+    left = []
+    right = []
+    pivot = data[0]
+
+    for index in range(1, len(data)):
+        if data[index] < pivot:
+            left.append(data[index])
+        else:
+            right.append(data[index])
+
+    return quick_sort(left) + [pivot] + quick_sort(right)
+
+import random
+
+Testlist = random.sample(range(100), 50)
+print(Testlist)
+
+a = quick_sort(Testlist)
+print(a)
+
+def qsort(data):
+    if len(data) <= 1:
+        return data
+    
+    pivot = data[0]
+    left = [item for item in data[1:] if pivot > item]
+    right = [item for item in data[1:] if pivot < item]
+
+    return quick_sort(left) + [pivot] + quick_sort(right)
+
+import random
+
+Testlist = random.sample(range(100), 50)
+print(Testlist)
+
+b = qsort(Testlist)
+print(b)
+
+
+
+# 재귀함수 팩토리얼
+
+def factorial(num):
+    if num <= 1:
+        return num
+
+    return num * factorial(num - 1)
+
+a = factorial(5)
+print(a)
+
+# 재귀함수 리스트의 합
+
+def list_sum(data):
+    if len(data) <= 1:
+        return data[0]
+
+    return data[0] + list_sum(data[1:])
+
+# 재귀함수 회문
+
+def palindrome(string):
+    if len(string) <= 1:
+        return True
+
+    if string[0] == string[-1]:
+        return palindrome(string[1:-1])
+    else:
+        return False
+
+b = palindrome("Motor")
+c = palindrome("level")
+print(b, c)
+
+# 동적계획법 피보나치 수열
+
+def fibo(num):
+    cache = [0 for i in range(num + 1)]
+    cache[0] = 0
+    cache[1] = 1
+
+    for index in range(2, num+1):
+        cache[index]  = cache[index-2] + cache[index-1]
+
+    return cache[num]
+
+d = fibo(10)
+print(d)
+
 """
+
+# 링크드리스트 연습
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+class NodeCon:
+    def __init__(self, data):
+        self.head = Node(data)
+
+    def insert(self, data):
+        if self.head == None:
+            self.head = Node(data)
+
+        node = self.head
+
+        while node.next:
+            node = node.next
+
+        node.next = Node(data)
+
+    def delete(self, data):
+        if data = self.head.data:
+            temp = self.head
+            temp.next = None
+            
