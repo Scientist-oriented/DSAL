@@ -3622,28 +3622,180 @@ print(d)
 
 # 링크드리스트 연습
 
-class Node:
-    def __init__(self, data):
-        self.data = data
-        self.next = None
+# 크루스칼 알고리즘
 
-class NodeCon:
+mygraph = {
+    'vertices': ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+    'edges': [
+        (7, 'A', 'B'),
+        (5, 'A', 'D'),
+        (7, 'B', 'A'),
+        (8, 'B', 'C'),
+        (9, 'B', 'D'),
+        (7, 'B', 'E'),
+        (8, 'C', 'B'),
+        (5, 'C', 'E'),
+        (5, 'D', 'A'),
+        (9, 'D', 'B'),
+        (7, 'D', 'E'),
+        (6, 'D', 'F'),
+        (7, 'E', 'B'),
+        (5, 'E', 'C'),
+        (7, 'E', 'D'),
+        (8, 'E', 'F'),
+        (9, 'E', 'G'),
+        (6, 'F', 'D'),
+        (8, 'F', 'E'),
+        (11, 'F', 'G'),
+        (9, 'G', 'E'),
+        (11, 'G', 'F')
+    ]
+}
+
+parent = dict()
+rank = dict()
+
+def find(node):
+    if parent[node] != node:
+        parent[node] = find(parent[node])
+    return parent[node]
+
+def union(node_v, node_u):
+    root1 = find(node_v)
+    root2 = find(node_u)
+
+    if rank[root1] > rank[root2]:
+        parent[root2] = root1
+    else:
+        parent[root1] = root2
+        if rank[root1] == rank[root2]:
+            rank[root2] += 1
+
+def make_set(node):
+    parent[node] = node
+    rank[node] = 0
+
+def kruskal(graph):
+    mst = []
+
+    for node in graph["vertices"]:
+        make_set(node)
+
+    edges = graph["edges"]
+    edges.sort()
+
+    for edge in edges:
+        weight, node_v, node_u = edge
+
+        if find(node_v) != find(node_u):
+            union(node_u, node_v)
+            mst.append(edge)
+
+    return mst
+
+a = kruskal(mygraph)
+print(a)
+
+
+
+# 최소 힙복습
+
+class Heap:
     def __init__(self, data):
-        self.head = Node(data)
+        self.heap_array = list()
+        self.heap_array.append(None)
+        self.heap_array.append(data)
+
+    def move_up(self, inserted_idx):
+        if inserted_idx <= 1:
+            return False
+
+        parent_idx = inserted_idx // 2
+
+        if self.heap_array[inserted_idx] < self.heap_array[parent_idx]:
+            return True
+        else:
+            return False
 
     def insert(self, data):
-        if self.head == None:
-            self.head = Node(data)
+        if len(self.heap_array) == 1:
+            self.heap_array.append(data)
+        else:
+            self.heap_array.append(data)
+            inserted_idx = len(self.heap_array) - 1
 
-        node = self.head
+            while self.move_up(inserted_idx):
+                parent_idx = inserted_idx // 2
+                self.heap_array[inserted_idx], self.heap_array[parent_idx] = self.heap_array[parent_idx], self.heap_array[inserted_idx]
+                inserted_idx = parent_idx
+                
+    def pop(self):
+        returned_data = self.heap_array[1]
+        self.heap_array[1], self.heap_array[-1] = self.heap_array[-1], self.heap_array[1]
+        del self.heap_array[-1]
 
-        while node.next:
-            node = node.next
+        popped_idx = 1
 
-        node.next = Node(data)
+        while self.move_down(popped_idx):
+            left_child_idx = 2 * popped_idx
+            right_child_idx = 2 * popped_idx + 1
 
-    def delete(self, data):
-        if data = self.head.data:
-            temp = self.head
-            temp.next = None
             
+            if right_child_idx >= len(self.heap_array):
+                if self.heap_array[left_child_idx] < self.heap_array[popped_idx]:
+                    self.heap_array[left_child_idx], self.heap_array[popped_idx] = self.heap_array[popped_idx], self.heap_array[left_child_idx]
+                    popped_idx = left_child_idx
+            else:
+                if self.heap_array[left_child_idx] < self.heap_array[right_child_idx]:
+                    if self.heap_array[left_child_idx] < self.heap_array[popped_idx]:
+                        self.heap_array[left_child_idx], self.heap_array[popped_idx] = self.heap_array[popped_idx], self.heap_array[left_child_idx]
+                        popped_idx = left_child_idx
+                else:
+                    if self.heap_array[right_child_idx] < self.heap_array[popped_idx]:
+                        self.heap_array[right_child_idx], self.heap_array[popped_idx] = self.heap_array[popped_idx], self.heap_array[right_child_idx]
+                        popped_idx = right_child_idx
+
+        return returned_data
+
+    def move_down(self, popped_idx):
+        left_child_idx = 2 * popped_idx
+        right_child_idx = 2 * popped_idx + 1
+
+        if left_child_idx >= len(self.heap_array):
+            return False
+        elif right_child_idx >= len(self.heap_array):
+            if self.heap_array[left_child_idx] < self.heap_array[popped_idx]:
+                return True
+            else:
+                return False
+        else:
+            if self.heap_array[left_child_idx] < self.heap_array[right_child_idx]:
+                if self.heap_array[left_child_idx] < self.heap_array[popped_idx]:
+                    return True
+                else:
+                    return False
+            else:
+                if self.heap_array[right_child_idx] < self.heap_array[popped_idx]:
+                    return True
+                else:
+                    return False
+
+
+heap = Heap(15)
+heap.insert(10)
+heap.insert(8)
+heap.insert(5)
+heap.insert(4)
+heap.insert(20)
+print(heap.heap_array)
+print(heap.pop())
+print(heap.heap_array)
+print(heap.pop())
+print(heap.heap_array)
+print(heap.pop())
+print(heap.heap_array)
+print(heap.pop())
+print(heap.heap_array)
+print(heap.pop())
+print(heap.heap_array)
+
