@@ -3618,7 +3618,7 @@ def fibo(num):
 d = fibo(10)
 print(d)
 
-"""
+
 
 # 링크드리스트 연습
 
@@ -3799,3 +3799,226 @@ print(heap.heap_array)
 print(heap.pop())
 print(heap.heap_array)
 
+
+
+# 백트래킹 N queen 알고리즘
+
+def solve_n_queen(N):
+    final_result = []
+    DFS(N, 0, [], final_result)
+    return final_result
+
+def DFS(N, current_row, current_candidate, final_result):
+    if current_row == N:
+        final_result.append(current_candidate[:])
+        return
+
+    for candidate_col in range(N):
+        if is_available(current_candidate, candidate_col):
+            current_candidate.append(candidate_col)
+            DFS(N, current_row + 1, current_candidate, final_result)
+            current_candidate.pop()
+
+def is_available(candidate, current_col):
+    current_row = len(candidate)
+    for queen_row in range(current_row):
+        if candidate[queen_row] == current_col or abs(candidate[queen_row] - current_col) == current_row - queen_row:
+            return False
+    return True
+
+a = solve_n_queen(4)
+print(a)
+
+
+
+# 링크드리스트 연습
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+class NodeCon:
+    def __init__(self, data):
+        self.head = Node(data)
+
+    def insert(self, data):
+        if self.head == None:
+            self.head = Node(data)
+        
+        else:
+            node = self.head
+            while node.next:
+                node = node.next
+            
+            node.next = Node(data)
+
+    def display(self):
+        node = self.head
+        while node:
+            print(node.data)
+            node = node.next
+
+    def delete(self, data):
+        if data == self.head.data:
+            self.head = self.head.next
+        else:
+            node = self.head
+            while node.next.data != data:
+                node = node.next
+            node.next = node.next.next
+
+    def search(self, data):
+        node = self.head
+
+        while node:
+            if node.data == data:
+                return True
+            else:
+                node = node.next
+
+        return False
+
+    
+list = NodeCon(1)
+
+for i in range(2, 11):
+    list.insert(i)
+
+list.display()
+
+list.delete(1)
+list.delete(6)
+list.delete(9)
+
+list.display()
+
+a = list.search(2)
+b = list.search(4)
+c = list.search(100)
+
+print(a, b, c)
+
+
+
+
+# 더블 링크드리스트 연습
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.prev = None
+        self.next = None
+
+class NodeCon:
+    def __init__(self, data):
+        self.head = Node(data)
+        self.tail = self.head
+
+    def insert(self, data):
+        if self.head == None:
+            self.head = Node(data)
+            self.tail = self.head
+        else:
+            node = self.head
+            while node.next:
+                node = node.next
+
+            new = Node(data)
+            node.next = new
+            new.prev = node
+            self.tail = new
+
+    def display(self):
+        node = self.head
+        while node:
+            print(node.data)
+            node = node.next
+
+    def delete(self, data):
+        if data == self.head.data:
+            self.head = self.head.next
+            self.head.prev = None
+        elif data == self.tail.data:
+            self.tail = self.tail.prev
+            self.tail.next = None
+        else:
+            node = self.head
+            while data != node.data:
+                node = node.next
+            node.prev.next = node.next
+            node.next.prev = node.prev
+
+    def insert_before(self, data, before):
+        if before == self.head.data:
+            new = Node(data)
+            new.next = self.head
+            self.head.prev = new
+            self.head = new
+        else:
+            node = self.head
+            while before != node.data:
+                node = node.next
+            new = Node(data)
+            node.prev.next = new
+            new.prev = node.prev
+            new.next = node
+            node.prev = new
+
+    def insert_after(self, data, after):
+        if after == self.tail.data:
+            new = Node(data)
+            self.tail.next = new
+            new.prev = self.tail
+            self.tail = new
+        else:
+            node = self.head
+            while after != node.data:
+                node = node.next
+            new = Node(data)
+            node.next.prev = new
+            new.next = node.next
+            new.prev = node
+            node.next = new
+
+
+list = NodeCon(1)
+
+for i in range(2, 11):
+    list.insert(i)
+
+list.display()
+
+# delete_list = [1, 3, 6, 9, 10]
+
+# for i in delete_list:
+#     list.delete(i)
+
+# list.display()
+
+list.insert_before(0.5, 1)
+list.insert_before(9.5, 10)
+list.insert_after(8.5, 8)
+list.insert_after(2.5, 2)
+
+list.display()
+    
+"""
+
+# 해쉬테이블 연습
+
+hash_table = [0 for _ in range(5)]
+
+def get_key(data):
+    key = hash(data)
+    return key
+
+def hash_function(key):
+    address = key % 5
+    return address
+
+def store(data):
+    key = get_key(data)
+    address = hash_function(key)
+
+    
