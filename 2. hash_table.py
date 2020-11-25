@@ -249,7 +249,7 @@ print(HLP_hash_table)
 
 # 개선된 linear probing
 
-hash_table = [0 for i in range(3)]
+hash_table = [0 for i in range(5)]
 print(hash_table)
 
 def get_key(data):
@@ -284,6 +284,26 @@ def save_data(data, value):
                 hash_table[index][1] = value
                 return
         print("Full table")
+def read(data):
+    key = get_key(data)
+    address = hash_function(key)
+
+    if hash_table[address] == 0:
+        return "No data"
+    elif hash_table[address][0] == key:
+        return hash_table[address][1]
+    else:
+        for index in range(address+1, len(hash_table)):
+            if hash_table[index] == 0:
+                continue
+            elif hash_table[index][0] == key:
+                return hash_table[index][1]
+        for index in range(0, address):
+            if hash_table[index] == 0:
+                continue
+            elif hash_table[index][0] == key:
+                return hash_table[index][1]
+        return "No data"
 
 
 save_data("Kim", "Korean")
@@ -291,6 +311,16 @@ save_data("Lee", "History")
 save_data("Moon", "English")
 save_data("Park", "Social Studies")
 
+print(hash_table)
+
 show_address("Kim")
 show_address("Lee")
 show_address("Moon")
+
+a = read("Kim")
+b = read("Lee")
+c = read("Moon")
+d = read("Park")
+e = read("Choi")
+
+print(a, b, c, d, e)

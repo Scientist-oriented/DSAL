@@ -4003,9 +4003,9 @@ list.insert_after(2.5, 2)
 
 list.display()
     
-"""
 
-# 해쉬테이블 연습
+
+# 해쉬테이블 연습 (체이닝)
 
 hash_table = [0 for _ in range(5)]
 
@@ -4017,8 +4017,430 @@ def hash_function(key):
     address = key % 5
     return address
 
-def store(data):
+def store(data, value):
     key = get_key(data)
     address = hash_function(key)
 
+    if hash_table[address] == 0:
+        hash_table[address] = [[key, value]]
+    else:
+        for index in range(len(hash_table[address])):
+            if hash_table[address][index][0] == key:
+                hash_table[address][index][1] = value
+                return
+        hash_table[address].append([key, value])
+
+def read(data):
+    key = get_key(data)
+    address = hash_function(key)
+
+    if hash_table[address] == 0:
+        return None
+    else:
+        for index in range(len(hash_table[address])):
+            if hash_table[address][index][0] == key:
+                return hash_table[address][index][1]
+        return None
+
+store("Kim", "Korea")
+store("Johnson", "USA")
+store("Yamamoto", "Japen")
+store("Ivanovichi", "Slovania")
+print(hash_table)
+
+a = read("Kim")
+b = read("Johnson")
+c = read("Yamamoto")
+d = read("Ivanovichi")
+e = read("Xi")
+print(a, b, c, d, e)
+
+
+
+# 해쉬테이블 연습 (linear probing)
+
+hash_table = [0 for _ in range(5)]
+
+def get_key(data):
+    key = hash(data)
+    return key
+
+def hash_function(key):
+    address = key % 5
+    return address
+
+def store(data, value):
+    key = get_key(data)
+    address = hash_function(key)
+
+    if hash_table[address] == 0:
+        hash_table[address] = [key, value]
+    else:
+        for index in range(address+1, len(hash_table)):
+            if hash_table[index] == 0:
+                hash_table[index] = [key, value]
+                return
+            elif hash_table[index][0] == key:
+                hash_table[index][1] = value
+                return
+        for index in range(0, address):
+            if hash_table[index] == 0:
+                hash_table[index] = [key, value]
+                return
+            elif hash_table[index][0] == key:
+                hash_table[index][1] = value
+                return
+
+def read(data):
+    key = get_key(data)
+    address = hash_function(key)
+
+    if hash_table[address] == 0:
+        return "No data"
+    elif hash_table[address][0] == key:
+        return hash_table[address][1]
+    else:
+        for index in range(address+1, len(hash_table)):
+            if hash_table[index] == 0:
+                continue
+            elif hash_table[index][0] == key:
+                return hash_table[index][1]
+        for index in range(0, address):
+            if hash_table[index] == 0:
+                continue
+            elif hash_table[index][0] == key:
+                return hash_table[index][1]
+        return "No data"
+
+store("Kim", "Korea")
+store("Johnson", "USA")
+store("Yamamoto", "Japen")
+store("Ivanovichi", "Slovania")
+print(hash_table)
+
+a = read("Kim")
+b = read("Johnson")
+c = read("Yamamoto")
+d = read("Ivanovichi")
+e = read("Xi")
+print(a, b, c, d, e)
+
+
+
+# 버블정렬
+
+def bubble_sort(data):
+    for index in range(len(data) - 1):
+        swap = False
+        for index2 in range(0, len(data)-index-1):
+            if data[index2] > data[index2+1]:
+                data[index2], data[index2+1] = data[index2+1], data[index2]
+                swap = True
+        if swap == False:
+            break
+    return data
+
+data = [1, 3, 2, 5, 4]
+a = bubble_sort(data)
+print(a)
+
+# 삽입정렬
+
+def insertion_sort(data):
+    for index in range(len(data)-1):
+        for index2 in range(index+1, 0, -1):
+            if data[index2] < data[index2-1]:
+                data[index2], data[index2-1] = data[index2-1], data[index2]
+            else:
+                break
+    return data
+
+data = [1, 3, 2, 5, 4]
+a = insertion_sort(data)
+print(a)
+
+
+
+# 선택정렬
+
+def selection_sort(data):
+    for stand in range(len(data) - 1):
+        lowest = stand
+        for index in range(stand, len(data)):
+            if data[lowest] > data[index]:
+                lowest = index
+        data[lowest], data[stand] = data[stand], data[lowest]
+    return data
+
+import random
+
+data_list = random.sample(range(100), 10)
+print(data_list)
+a = selection_sort(data_list)
+print(a)
+
+
+
+# 머지 소트
+
+def merge_sort(data):
+    if len(data) <= 1:
+        return data
+
+    medium = len(data) // 2
+
+    left = merge_sort(data[:medium])
+    right = merge_sort(data[medium:])
+
+    return merge(left, right)
+
+def merge(left, right):
+    left_point = 0
+    right_point = 0
+    merged = []
+
+    while left_point < len(left) and right_point < len(right):
+        if left[left_point] < right[right_point]:
+            merged.append(left[left_point])
+            left_point += 1
+        else:
+            merged.append(right[right_point])
+            right_point += 1
+
+    while left_point < len(left):
+        merged.append(left[left_point])
+        left_point += 1
+
+    while right_point < len(right):
+        merged.append(right[right_point])
+        right_point += 1
+
+    return merged
+
+import random
+
+data_list = random.sample(range(100), 10)
+print(data_list)
+a = merge_sort(data_list)
+print(a)
+            
+
+
+# 퀵소트
+
+def quick_sort(data):
+    if len(data) <= 1:
+        return data
+
+    pivot = data[0]
+
+    left = [i for i in data[1:] if i < pivot]
+    right = [i for i in data[1:] if i > pivot]
+
+    return quick_sort(left) + [pivot] + quick_sort(right)
+
+import random
+
+data_list = random.sample(range(100), 10)
+print(data_list)
+a = quick_sort(data_list)
+print(a)
+
+# 재귀용법 factorial
+
+def factorial(num):
+    if num <= 1:
+        return num
     
+    return num * factorial(num - 1)
+
+a = factorial(5)
+print(a)
+
+# 재귀용법 리스트의 합
+
+def list_sum(data):
+    if len(data) <= 1:
+        return data[0]
+    else:
+        return data[0] + list_sum(data[1:])
+
+data_list = [item for item in range(1, 101)]
+print(data_list)
+a = list_sum(data_list) 
+print(a)
+
+# 재귀함수 회문
+
+def palindrome(string):
+    if len(string) <= 1:
+        return True
+    else:
+        if string[0] == string[-1]:
+            return palindrome(string[1:-1])
+        else:
+            return False
+
+a = palindrome("Model")
+b = palindrome("level")
+
+print(a, b)
+
+
+# 동적계획법: 피보나치 수열
+
+def fibo(num):
+    cache = [0 for index in range(num + 1)]
+
+    cache[0] = 0
+    cache[1] = 1
+
+    for index in range(2, num + 1):
+        cache[index] = cache[index - 1] + cache[index - 2]
+
+    return cache[num]
+
+for index in range(2, 10):
+    a = fibo(index)
+    print(a)
+
+"""
+
+# 이진탐색트리
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.left = None
+        self.right = None
+
+class NodeCon:
+    def __init__(self, data):
+        self.head = Node(data)
+
+    def insert(self, data):
+        if self.head == None:
+            self.head = Node(data)
+
+        else:
+            node = self.head
+            while True:
+                if data < node.data:
+                    if node.left == None:
+                        node.left = Node(data)
+                        break
+                    else:
+                        node = node.left
+                else:
+                    if node.right == None:
+                        node.right = Node(data)
+                        break
+                    else:
+                        node = node.right
+
+    def search(self, data):
+        if self.head == None:
+            return "No data in the Tree"
+
+        else:
+            node = self.head
+            while node:
+                if data == node.data:
+                    return True
+                elif data < node.data:
+                    node = node.left
+                else:
+                    node = node.right
+            return False
+
+    def delete(self, data):
+        searched = False
+
+        node = self.head
+        parent_node = self.head
+        while node:
+            if data == node.data:
+                searched = True
+                break
+            elif data < node.data:
+                parent_node = node
+                node = node.left
+            else:
+                parent_node = node
+                node = node.right
+
+        if searched == False:
+            print("Delete Failed")
+            return False
+
+
+        if node.left == None and node.right == None:
+            if node.data < parent_node.data:
+                parent_node.left = None
+            else:
+                parent_node.right = None
+        elif node.left != None and node.right == None:
+            if node.data < parent_node.data:
+                parent_node.left = node.left
+            else:
+                parent_node.right = node.left
+        elif node.left == None and node.right != None:
+            if node.data < parent_node.data:
+                parent_node.left = node.right
+            else:
+                parent_node.right = node.right
+        else:
+            change_node = node.right
+            change_node_parent = node.right
+
+            while change_node.left:
+                change_node_parent = change_node
+                change_node = change_node.left
+
+            if node.data < parent_node.data:
+                change_node_parent.left = change_node.right
+                parent_node.left = change_node
+                change_node.left = node.left
+                change_node.right = node.right
+            else:
+                change_node_parent.left = change_node.right
+                parent_node.right = change_node
+                change_node.left = node.left
+                change_node.right = node.right
+        
+        print("Deleted")
+
+
+import random
+
+test_nums = set()
+while len(test_nums) != 100:
+    test_nums.add(random.randint(0, 999))
+
+print(test_nums)
+
+test_tree = NodeCon(500)
+
+for nums in test_nums:
+    test_tree.insert(nums)
+
+for nums in test_nums:
+    test_tree.search(nums)
+
+print("test ready")
+
+test_delete_nums = set()
+test_nums_list = list(test_nums)
+    # set는 인덱싱이 불가능하다!
+
+while len(test_delete_nums) != 10:
+    test_delete_nums.add(test_nums_list[random.randint(0, 99)])
+
+print(test_delete_nums)
+
+for nums in test_delete_nums:
+    test_tree.delete(nums)
+
+
+    
+
