@@ -4304,7 +4304,7 @@ for index in range(2, 10):
     a = fibo(index)
     print(a)
 
-"""
+
 
 # 이진탐색트리
 
@@ -4442,5 +4442,267 @@ for nums in test_delete_nums:
     test_tree.delete(nums)
 
 
-    
 
+# 순차탐색 연습
+
+def sequential_search(data_list, search_data):
+    for index in range(len(data_list)):
+        if data_list[index] == search_data:
+            return index
+    return -1
+
+import random
+
+data_list = []
+for _ in range(5):
+    data_list.append(random.randint(1, 10))  
+
+print(data_list)
+a = sequential_search(data_list, 5)
+print(a)
+
+
+
+# 이진탐색 연습
+
+def binary_search(data_list, data):
+    if len(data_list) == 0:
+        return False
+    if len(data_list) == 1:
+        if data_list[0] == data:
+            return True
+        else:
+            return False
+
+    medium = len(data_list) // 2
+
+    if data_list[medium] == data:
+        return True
+    else:
+        if data_list[medium] > data:
+            return binary_search(data_list[:medium], data)
+        else:
+            return binary_search(data_list[medium+1:], data)
+
+import random
+
+data_list = set()
+while len(data_list) !=5:
+    data_list.add(random.randint(1, 10))  
+
+data_list = list(data_list)
+data_list.sort()
+print(data_list)
+a = binary_search(data_list, 5)
+print(a)
+
+
+# 너비우선탐색 연습
+
+graph = dict()
+
+graph['A'] = ['B', 'C']
+graph['B'] = ['A', 'D']
+graph['C'] = ['A', 'G', 'H', 'I']
+graph['D'] = ['B', 'E', 'F']
+graph['E'] = ['D']
+graph['F'] = ['D']
+graph['G'] = ['C']
+graph['H'] = ['C']
+graph['I'] = ['C', 'J']
+graph['J'] = ['I']
+
+def bfs(graph, start):
+    visited = []
+    need_visit = []
+
+    need_visit.append(start)
+
+    while need_visit:
+        node = need_visit.pop(0)
+        if node not in visited:
+            visited.append(node)
+            need_visit.extend(graph[node])
+    return visited
+
+a = bfs(graph, "A")
+print(a)
+
+
+
+# 깊이우선 탐색 연습
+
+graph = dict()
+
+graph['A'] = ['B', 'C']
+graph['B'] = ['A', 'D']
+graph['C'] = ['A', 'G', 'H', 'I']
+graph['D'] = ['B', 'E', 'F']
+graph['E'] = ['D']
+graph['F'] = ['D']
+graph['G'] = ['C']
+graph['H'] = ['C']
+graph['I'] = ['C', 'J']
+graph['J'] = ['I']
+
+def dfs(graph, start):
+    visited = []
+    need_visit = []
+
+    need_visit.append(start)
+
+    while need_visit:
+        node = need_visit.pop()
+        if node not in visited:
+            visited.append(node)
+            need_visit.extend(graph[node])
+    return visited
+
+a = dfs(graph, "A")
+print(a)
+
+
+# 탐욕 알고리즘 동전문제
+
+coin_list = [1, 100, 50, 500]
+
+def min_coin_count(coin_list, value):
+    total_coin_count = 0    
+    details = []
+    coin_list.sort(reverse=True)
+
+    for coin in coin_list:
+        coin_count = value // coin
+        total_coin_count += coin_count
+        value -= coin * coin_count
+        details.append((coin, coin_count))
+
+    return total_coin_count, details
+
+a = min_coin_count(coin_list, 4720)
+print(a)
+
+
+# 탐욕알고리즘 부분배낭문제
+
+data_list = [(10, 10), (15, 12), (20, 10), (25, 8), (30, 5)]
+
+def get_max_value(data_list, capacity):
+    data_list = sorted(data_list, key=lambda x: x[1] / x[0], reverse=True)
+    total_value = 0
+    details = list()
+
+    for data in data_list:
+        if capacity >= data[0]:
+            total_value += data[1]
+            capacity -= data[0]
+            details.append((data[0], data[1], 1))
+        else:
+            fraction = capacity / data[0]
+            total_value += data[1] * fraction
+            details.append((data[0], data[1], fraction))
+            break
+    return total_value, details
+
+a = get_max_value(data_list, 30)
+print(a)
+
+
+
+# 탐욕알고리즘 부분배낭문제
+
+data_list = [(10, 10), (15, 12), (20, 10), (25, 8), (30, 5)]
+
+def get_max_value(data_list, capacity):
+    data_list = sorted(data_list, key=lambda x: x[1] / x[0], reverse=True)
+    total_value = 0
+    details = []
+
+    for data in data_list:
+        if capacity > data[0]:
+            total_value += data[1]
+            capacity -= data[0]
+            details.append((data[0], data[1], 1))
+        else:
+            fraction = capacity / data[0]
+            total_value += data[1] * fraction
+            details.append((data[0], data[1], fraction))
+            break
+    return total_value, details
+
+a = get_max_value(data_list, 30)
+print(a)
+
+
+# 다익스트라 알고리즘
+
+mygraph = {
+    'A': {'B': 8, 'C': 1, 'D': 2},
+    'B': {},
+    'C': {'B': 5, 'D': 2},
+    'D': {'E': 3, 'F': 5},
+    'E': {'F': 1},
+    'F': {'A': 5}
+}
+
+import heapq
+
+def dijkstra(graph, start):
+    distances = {node: float('inf') for node in graph}
+    distances[start] = 0
+    queue = list()
+    heapq.heappush(queue, (distances[start], start))
+
+    while queue:
+        current_distance, current_node = heapq.heappop(queue)
+
+        if distances[current_node] < current_distance:
+            continue
+
+        for adjacent, weight in graph[current_node].items():
+            distance = current_distance + weight
+            if distance < distances[adjacent]:
+                distances[adjacent] = distance
+                heapq.heappush(queue, [distance, adjacent])
+
+    return distances
+
+a = dijkstra(mygraph, "A")
+print(a)
+
+"""
+# 다익스트라 알고리즘
+
+mygraph = {
+    'A': {'B': 8, 'C': 1, 'D': 2},
+    'B': {},
+    'C': {'B': 5, 'D': 2},
+    'D': {'E': 3, 'F': 5},
+    'E': {'F': 1},
+    'F': {'A': 5}
+}
+
+import heapq
+
+def dijkstra(graph, start):
+    distances = {node: float('inf') for node in graph}
+    distances[start] = 0
+    queue = []
+    heapq.heappush(queue, (distances[start], start))
+
+    while queue:
+        current_distance, current_node = heapq.heappop(queue)
+        
+        if current_distance > distances[current_node]:
+            continue
+
+        for adjacent, weight in graph[current_node].items():
+            distance = current_distance + weight
+            if distance < distances[adjacent]:
+                distances[adjacent] = distance
+                heapq.heappush(queue, (distance, adjacent))
+
+    return distances
+
+a = dijkstra(mygraph, "A")
+print(a)
