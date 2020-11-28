@@ -4870,6 +4870,110 @@ def is_available(candidate, candidate_col):
     return True
 
 print(solve_n_queens(4))
-"""
 
+# 백트래킹 n queen 연습
+
+def solve_n_queens(N):
+    final_result = []
+    DFS(N, 0, [], final_result)
+    return final_result
+
+def DFS(N, current_row, candidate, final_result):
+    if current_row == N:
+        final_result.append(candidate[:])
+        return
+
+    for current_col in range(N):
+        if is_available(current_col, candidate):
+            candidate.append(current_col)
+            DFS(N, current_row + 1, candidate, final_result)
+            candidate.pop()
+
+def is_available(current_col, candidate):
+    current_row = len(candidate)
+    for queen_row in range(len(candidate)):
+        if candidate[queen_row] == current_col or abs(current_col - candidate[queen_row]) == current_row - queen_row:
+            return False
+    return True
+
+a = solve_n_queens(4)
+print(a)
+
+# 버블정렬 연습
+
+def bubble_sort(data):
+    for index in range(len(data) - 1):
+        swap = False
+        for index2 in range(len(data) - index - 1):
+            if data[index2] > data[index2 + 1]:
+                data[index2], data[index2 + 1] = data[index2 + 1], data[index2]
+                swap = True
+        if swap == False:
+            break
+    return data
+
+import random
+
+Testlist = random.sample(range(10), 5)
+print(Testlist)
+
+a = bubble_sort(Testlist)
+print(a)
+
+
+
+# 삽입정렬 연습
+
+def insertion_sort(data):
+    for index in range(len(data) - 1):
+        for index2 in range(index + 1, 0, -1):
+            if data[index2] < data[index2 - 1]:
+                data[index2], data[index2 - 1] = data[index2 - 1], data[index2]
+            else:
+                break
+    return data
+
+import random
+
+Testlist = random.sample(range(10), 5)
+print(Testlist)
+
+a = insertion_sort(Testlist)
+print(a)
+
+# 선택정렬 연습
+
+def selection_sort(data):
+    for stand in range(len(data) - 1):
+        lowest = stand
+        for index in range(stand + 1, len(data)):
+            if data[index] < data[lowest]:
+                lowest = index
+        data[stand], data[lowest] = data[lowest], data[stand]
+    return data
+
+import random
+
+Testlist = random.sample(range(20), 10)
+print(Testlist)
+
+a = selection_sort(Testlist)
+print(a)
+"""
+# 머지소트 연습
+
+def merge_sort(data):
+    if len(data) <= 1:
+        return data
+
+    medium = len(data) // 2
+    left = merge_sort(data[:medium])
+    right = merge_sort(data[medium:])
+
+    return merge(left, right)
+
+def merge(left, right):
+    left_point = 0
+    right_point = 0
     
+
