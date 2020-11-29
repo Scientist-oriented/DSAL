@@ -1,5 +1,8 @@
-array = {(3, "b"), (3, "a"), (2, "d"), (2, "c")}
+dictionary = {
+    "A": "a",
+    "B": "b"
+}
 
-array = sorted(array)
+for item in dictionary:
+    print(item)
 
-print(array)

@@ -4959,7 +4959,7 @@ print(Testlist)
 
 a = selection_sort(Testlist)
 print(a)
-"""
+
 # 머지소트 연습
 
 def merge_sort(data):
@@ -4975,5 +4975,493 @@ def merge_sort(data):
 def merge(left, right):
     left_point = 0
     right_point = 0
-    
+    merged = list()
 
+    while True:
+        if left_point < len(left) and right_point < len(right):
+            if left[left_point] < right[right_point]:
+                merged.append(left[left_point])
+                left_point += 1
+            else:
+                merged.append(right[right_point])
+                right_point += 1
+        elif left_point < len(left):
+            merged.append(left[left_point])
+            left_point += 1
+        elif right_point < len(right):
+            merged.append(right[right_point])
+            right_point += 1
+        else:
+            break
+    
+    return merged
+
+import random
+
+Testlist = random.sample(range(20), 10)
+print(Testlist)
+
+a = merge_sort(Testlist)
+print(a)
+
+
+# 퀵소트 연습
+
+def quick_sort(data):
+    if len(data) <= 1:
+        return data
+
+    pivot = data[0]
+    left = [item for item in data[1:] if item < pivot]
+    right = [item for item in data[1:] if item > pivot]
+
+    return quick_sort(left) + [pivot] + quick_sort(right)
+
+import random
+
+Testlist = random.sample(range(20), 10)
+print(Testlist)
+
+a = quick_sort(Testlist)
+print(a)
+
+
+
+# 크루스칼 알고리즘 연습
+
+mygraph = {
+    'vertices': ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+    'edges': [
+        (7, 'A', 'B'),
+        (5, 'A', 'D'),
+        (7, 'B', 'A'),
+        (8, 'B', 'C'),
+        (9, 'B', 'D'),
+        (7, 'B', 'E'),
+        (8, 'C', 'B'),
+        (5, 'C', 'E'),
+        (5, 'D', 'A'),
+        (9, 'D', 'B'),
+        (7, 'D', 'E'),
+        (6, 'D', 'F'),
+        (7, 'E', 'B'),
+        (5, 'E', 'C'),
+        (7, 'E', 'D'),
+        (8, 'E', 'F'),
+        (9, 'E', 'G'),
+        (6, 'F', 'D'),
+        (8, 'F', 'E'),
+        (11, 'F', 'G'),
+        (9, 'G', 'E'),
+        (11, 'G', 'F')
+    ]
+}
+
+
+parent = dict()
+rank = dict()
+
+def find(node):
+    if parent[node] != node:
+        parent[node] = find(parent[node])
+    return parent[node]
+
+def union(node1, node2):
+    root1 = parent[node1]
+    root2 = parent[node2]
+
+    if rank[root1] > rank[root2]:
+        parent[root2] = root1
+    else:
+        parent[root1] = root2
+        if rank[root1] == rank[root2]:
+            rank[root2] += 1
+
+def make_set(node):
+    parent[node] = node
+    rank[node] = 0
+
+def kruskal(graph):
+    mst = list()
+
+    for node in graph["vertices"]:
+        make_set(node)
+
+    edges = graph["edges"]
+    edges.sort()
+
+    for edge in edges:
+        weight, node1, node2 = edge
+        if find(node1) != find(node2):
+            union(node1, node2)
+            mst.append(edge)
+
+    return mst
+
+a = kruskal(mygraph)
+print(a)
+
+
+
+# 프림알고리즘 연습
+
+myedges = [
+    (7, 'A', 'B'), (5, 'A', 'D'),
+    (8, 'B', 'C'), (9, 'B', 'D'), (7, 'B', 'E'),
+    (5, 'C', 'E'),
+    (7, 'D', 'E'), (6, 'D', 'F'),
+    (8, 'E', 'F'), (9, 'E', 'G'),
+    (11, 'F', 'G')
+]
+
+from collections import defaultdict
+from heapq import *
+
+def prim(start_node, edges):
+    mst = list()
+    adjacent_edges = defaultdict(list)
+    for weight, n1, n2 in edges:
+        adjacent_edges[n1].append((weight, n1, n2))
+        adjacent_edges[n2].append((weight, n2, n1))
+
+    connected_nodes = set(start_node)
+    candidate_edge_list = adjacent_edges[start_node]
+
+    heapify(candidate_edge_list)
+
+    while candidate_edge_list:
+        weight, n1, n2 = heappop(candidate_edge_list)
+        if n2 not in connected_nodes:
+            connected_nodes.add(n2)
+            mst.append((weight, n1, n2))
+            for edge in adjacent_edges[n2]:
+                if edge[2] not in connected_nodes:
+                    heappush(candidate_edge_list, edge)
+
+    return mst
+
+a = prim('A', myedges)
+print(a)
+
+
+
+# 개선된 프림 알고리즘 연습
+
+mygraph = {
+    'A': {'B': 7, 'D': 5},
+    'B': {'A': 7, 'D': 9, 'C': 8, 'E': 7},
+    'C': {'B': 8, 'E': 5},
+    'D': {'A': 5, 'B': 9, 'E': 7, 'F': 6},
+    'E': {'B': 7, 'C': 5, 'D': 7, 'F': 8, 'G': 9},
+    'F': {'D': 6, 'E': 8, 'G': 11},
+    'G': {'E': 9, 'F': 11}    
+}
+
+from heapdict import heapdict
+
+def prim(graph, start):
+    mst, keys, pi, total_weight = list(), heapdict(), dict(), 0
+    for node in graph.keys():
+        keys[node] = float('inf')
+        pi[node] = None
+    keys[start], pi[start] = 0, start
+
+    while keys:
+        current_node, curruent_key = keys.popitem()
+        mst.append([pi[current_node], current_node, curruent_key])
+        total_weight += curruent_key
+
+        for adjacent, weight in mygraph[current_node].items():
+            if adjacent in keys and weight < keys[adjacent]:
+                keys[adjacent] = weight
+                pi[adjacent] = current_node
+
+    return mst, total_weight
+
+mst, total_weight = prim(mygraph, 'A')
+print(mst)
+print(total_weight)
+
+
+# 크루스칼 알고리즘
+
+mygraph = {
+    'vertices': ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+    'edges': [
+        (7, 'A', 'B'),
+        (5, 'A', 'D'),
+        (7, 'B', 'A'),
+        (8, 'B', 'C'),
+        (9, 'B', 'D'),
+        (7, 'B', 'E'),
+        (8, 'C', 'B'),
+        (5, 'C', 'E'),
+        (5, 'D', 'A'),
+        (9, 'D', 'B'),
+        (7, 'D', 'E'),
+        (6, 'D', 'F'),
+        (7, 'E', 'B'),
+        (5, 'E', 'C'),
+        (7, 'E', 'D'),
+        (8, 'E', 'F'),
+        (9, 'E', 'G'),
+        (6, 'F', 'D'),
+        (8, 'F', 'E'),
+        (11, 'F', 'G'),
+        (9, 'G', 'E'),
+        (11, 'G', 'F')
+    ]
+}
+
+parent = dict()
+rank = dict()
+
+def find(node):
+    if parent[node] != node:
+        parent[node] = find(parent[node])
+    return parent[node]
+
+def union(node1, node2):
+    root1 = find(node1)
+    root2 = find(node2)
+
+    if rank[root1] > rank[root2]:
+        parent[root2] = root1
+    else:
+        parent[root1] = root2
+        if rank[root1] == rank[root2]:
+            rank[root2] += 1
+
+def make_set(node):
+    parent[node] = node
+    rank[node] = 0
+
+def kruskal(graph):
+    mst = list()
+
+    for node in graph['vertices']:
+        make_set(node)
+
+    edges = graph["edges"]
+    edges.sort()
+
+    for edge in edges:
+        weight, node1, node2 = edge
+        if find(node1) != find(node2):
+            union(node1, node2)
+            mst.append(edge)
+
+    return mst
+
+a = kruskal(mygraph)
+print(a)
+
+
+
+# 프림알고리즘
+
+myedges = [
+    (7, 'A', 'B'), (5, 'A', 'D'),
+    (8, 'B', 'C'), (9, 'B', 'D'), (7, 'B', 'E'),
+    (5, 'C', 'E'),
+    (7, 'D', 'E'), (6, 'D', 'F'),
+    (8, 'E', 'F'), (9, 'E', 'G'),
+    (11, 'F', 'G')
+]
+
+from collections import defaultdict
+from heapq import *
+
+def prim(start_node, edges):
+    mst = list()
+    adjacent_edges = defaultdict(list)
+
+    for weight, n1, n2 in edges:
+        adjacent_edges[n1].append((weight, n1, n2))
+        adjacent_edges[n2].append((weight, n2, n1))
+
+    connected_nodes = set(start_node)
+    candidate_edge_list = adjacent_edges[start_node]
+    heapify(candidate_edge_list)
+
+    while candidate_edge_list:
+        weight, n1, n2 = heappop(candidate_edge_list)
+        if n2 not in connected_nodes:
+            connected_nodes.add(n2)
+            mst.append((weight, n1, n2))
+
+            for edge in adjacent_edges[n2]:
+                if edge[2] not in connected_nodes:
+                    heappush(candidate_edge_list, edge)
+    
+    return mst
+
+a = prim('A', myedges)
+print(a)
+
+# 개선된 프림알고리즘
+
+mygraph = {
+    'A': {'B': 7, 'D': 5},
+    'B': {'A': 7, 'D': 9, 'C': 8, 'E': 7},
+    'C': {'B': 8, 'E': 5},
+    'D': {'A': 5, 'B': 9, 'E': 7, 'F': 6},
+    'E': {'B': 7, 'C': 5, 'D': 7, 'F': 8, 'G': 9},
+    'F': {'D': 6, 'E': 8, 'G': 11},
+    'G': {'E': 9, 'F': 11}    
+}
+
+
+from heapdict import heapdict
+
+def prim(graph, start):
+    mst, keys, pi, total_weight = list(), heapdict(), dict(), 0
+
+    for node in graph:
+        keys[node] = float('inf')
+        pi[node] = None
+
+    keys[start], pi[start] = 0, start
+
+    while keys:
+        current_node, current_key = keys.popitem()
+        mst.append([pi[current_node], current_node, current_key])
+        total_weight += current_key
+
+        for adjacent, weight in graph[current_node].items():
+            if adjacent in keys and weight < keys[adjacent]:
+                keys[adjacent] = weight
+                pi[adjacent] = current_node
+
+    return mst, total_weight
+
+mst, total_weight = prim(mygraph, 'A')
+print ('MST:', mst)
+print ('Total Weight:', total_weight)
+
+# 순차탐색
+
+def sequential_search(data, search_data):
+    for index in range(len(data)):
+        if data[index] == search_data:
+            return index
+    return -1
+
+import random
+
+Testlist = random.sample(range(20), 10)
+print(Testlist)
+
+a = sequential_search(Testlist, 1)
+print(a)
+
+# 이진탐색
+
+def binary_search(data, search_data):
+    if len(data) == 1:
+        if data[0] == search_data:
+            return True
+        else:
+            return False
+    if len(data) == 0:
+        return False
+
+    medium = len(data) // 2
+
+    if data[medium] == search_data:
+        return True
+    elif data[medium] > search_data:
+        return binary_search(data[:medium], search_data)
+    else:
+        return binary_search(data[medium+1:], search_data)
+
+import random
+
+Testlist = random.sample(range(20), 10)
+print(Testlist)
+Testlist.sort()
+print(Testlist)
+
+a = binary_search(Testlist, 1)
+print(a)
+
+# 너비우선탐색
+graph = dict()
+
+graph['A'] = ['B', 'C']
+graph['B'] = ['A', 'D']
+graph['C'] = ['A', 'G', 'H', 'I']
+graph['D'] = ['B', 'E', 'F']
+graph['E'] = ['D']
+graph['F'] = ['D']
+graph['G'] = ['C']
+graph['H'] = ['C']
+graph['I'] = ['C', 'J']
+graph['J'] = ['I']
+
+def bfs(graph, start):
+    visited = []
+    need_visit = []
+
+    need_visit.append(start)
+
+    while need_visit:
+        node = need_visit.pop(0)
+        if node not in visited:
+            visited.append(node)
+            need_visit.extend(graph[node])
+
+    return visited
+
+a = bfs(graph, 'A')
+print(a)
+
+# 깊이우선탐색
+graph = dict()
+
+graph['A'] = ['B', 'C']
+graph['B'] = ['A', 'D']
+graph['C'] = ['A', 'G', 'H', 'I']
+graph['D'] = ['B', 'E', 'F']
+graph['E'] = ['D']
+graph['F'] = ['D']
+graph['G'] = ['C']
+graph['H'] = ['C']
+graph['I'] = ['C', 'J']
+graph['J'] = ['I']
+
+def dfs(graph, start):
+    visited = list()
+    need_visit = list()
+
+    need_visit.append(start)
+
+    while need_visit:
+        node = need_visit.pop()
+        if node not in visited:
+            visited.append(node)
+            need_visit.extend(graph[node])
+
+    return visited
+
+a = dfs(graph, 'A')
+print(a)
+"""
+# 탐욕알고리즘 동전문제
+coin_list = [1, 100, 50, 500]
+
+def min_coin_count(coin_list, value):
+    coin_list.sort(reverse=True)
+    total_coin_count = 0
+    details = []
+
+    for coin in coin_list:
+        coin_count = value // coin
+        total_coin_count += coin_count
+        value -= coin * coin_count
+        details.append((coin, coin_count))
+
+    return total_coin_count, details
+
+a = min_coin_count(coin_list, 4720)
+print(a)
