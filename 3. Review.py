@@ -5446,7 +5446,7 @@ def dfs(graph, start):
 
 a = dfs(graph, 'A')
 print(a)
-"""
+
 # 탐욕알고리즘 동전문제
 coin_list = [1, 100, 50, 500]
 
@@ -5464,4 +5464,474 @@ def min_coin_count(coin_list, value):
     return total_coin_count, details
 
 a = min_coin_count(coin_list, 4720)
+print(a)
+
+# 탐욕알고리즘 
+
+data_list = [(10, 10), (15, 12), (20, 10), (25, 8), (30, 5)]
+
+def get_max_value(data_list, capacity):
+    data_list = sorted(data_list, key=lambda x: x[1] / x[0], reverse=True)
+    details = []
+    total_value = 0
+
+    for data in data_list:
+        if capacity > data[0]:
+            capacity -= data[0]
+            total_value += data[1]
+            details.append((data[0], data[1], 1))
+        else:
+            fraction = capacity / data[0]
+            total_value += data[1] * fraction
+            details.append((data[0], data[1], fraction))
+            break
+
+    return total_value, details
+
+a = get_max_value(data_list, 30)
+print(a)
+
+# 다익스트라 알고리즘
+
+mygraph = {
+    'A': {'B': 8, 'C': 1, 'D': 2},
+    'B': {},
+    'C': {'B': 5, 'D': 2},
+    'D': {'E': 3, 'F': 5},
+    'E': {'F': 1},
+    'F': {'A': 5}
+}
+
+import heapq
+
+def dijkstra(graph, start):
+    distances = {node: float('inf') for node in graph}
+    distances[start] = 0
+    queue = []
+    heapq.heappush(queue, (distances[start], start))
+
+    while queue:
+        current_distance, current_node = heapq.heappop(queue)
+
+        if distances[current_node] < current_distance:
+            continue
+
+        for adjacent, weight in mygraph[current_node].items():
+            distance = weight + current_distance
+
+            if distance < distances[adjacent]:
+                distances[adjacent] = distance
+                heapq.heappush(queue, (distances[adjacent], adjacent))
+
+    return distances
+
+a = dijkstra(mygraph, 'A')
+print(a)
+
+# 백트래킹 n queen
+
+def solve_n_queen(N):
+    final_result = []
+    DFS(N, 0, [], final_result)
+    return final_result
+
+def DFS(N, current_row, candidate, final_result):
+    if current_row == N:
+        final_result.append(candidate[:])
+        return
+
+    for current_col in range(N):
+        if is_available(current_col, candidate):
+            candidate.append(current_col)
+            DFS(N, current_row+1, candidate, final_result)
+            candidate.pop()
+
+def is_available(current_col, candidate):
+    current_row = len(candidate)
+    for queen_row in range(current_row):
+        if candidate[queen_row] == current_col or abs(candidate[queen_row] - current_col) == current_row - queen_row:
+            return False
+    return True
+
+a = solve_n_queen(4)
+print(a)
+
+# 다익스트라 알고리즘
+mygraph = {
+    'A': {'B': 8, 'C': 1, 'D': 2},
+    'B': {},
+    'C': {'B': 5, 'D': 2},
+    'D': {'E': 3, 'F': 5},
+    'E': {'F': 1},
+    'F': {'A': 5}
+}
+
+import heapq
+
+def dijkstra(graph, start):
+    distances = {node: float('inf') for node in graph}
+    distances[start] = 0
+    queue = []
+    heapq.heappush(queue, (distances[start], start))
+
+    while queue:
+        current_distance, current_node = heapq.heappop(queue)
+        if current_distance > distances[current_node]:
+            continue
+        for adjacent, weight in graph[current_node].items():
+            distance = current_distance + weight
+            if distances[adjacent] > distance:
+                distances[adjacent] = distance
+                heapq.heappush(queue, (distance, adjacent))
+
+    return distances
+
+a = dijkstra(mygraph, 'A')
+print(a)
+
+# 백트래킹 N queen 문제
+def solve_n_queen(N):
+    final_result = []
+    DFS(N, 0, [], final_result)
+    return final_result
+
+def DFS(N, current_row, candidate, final_result):
+    if len(candidate) == N:
+        final_result.append(candidate[:])
+        return
+
+    for current_col in range(N):
+        if is_available(current_col, candidate):
+            candidate.append(current_col)
+            DFS(N, current_row+1, candidate, final_result)
+            candidate.pop()
+
+def is_available(current_col, candidate):
+    current_row = len(candidate)
+    for queen_row in range(current_row):
+        if candidate[queen_row] == current_col or abs(candidate[queen_row] - current_col) == current_row - queen_row:
+            return False
+    return True
+
+a = solve_n_queen(4)
+print(a)
+
+# 버블정렬
+
+def bubble_sort(data):
+    for index in range(len(data) - 1):
+        for index2 in range(len(data) - index - 1):
+            if data[index2] 
+
+import random
+
+Testlist = random.sample(range(20), 10)
+print(Testlist)
+
+a = bubble_sort(Testlist)
+print(a)
+
+# 링크드리스트 연습
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+class NodeCon:
+    def __init__(self, data):
+        self.head = Node(data)
+
+    def insert(self, data):
+        if self.head == None:
+            self.head = Node(data)
+        else:
+            node = self.head
+            while node.next:
+                node = node.next
+            node.next = Node(data)
+
+    def display(self):
+        node = self.head
+        while node:
+            print(node.data)
+            node = node.next
+
+    def delete(self, data):
+        if data == self.head.data:
+            self.head = self.head.next
+        else:
+            node = self.head
+            while node.next.data != data:
+                node = node.next
+            node.next = node.next.next
+
+    def search(self, data):
+        node = self.head
+        while node:
+            if node.data == data:
+                return True
+            else:    
+                node = node.next
+        return False
+
+test_list = NodeCon(0)
+
+for data in range(1, 10):
+    test_list.insert(data)
+
+test_list.display()
+
+print("-----------------------")
+
+test_list.delete(0)
+test_list.delete(3)
+test_list.delete(9)
+
+test_list.display()
+
+print(test_list.search(1))
+print(test_list.search(3))
+print(test_list.search(100))
+
+# 더블링크드 리스트
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.prev = None
+        self.next = None
+
+class NodeCon:
+    def __init__(self, data):
+        self.head = Node(data)
+        self.tail = self.head
+
+    def insert(self, data):
+        if self.head == None:
+            self.head = Node(data)
+            self.tail = self.head
+        else:
+            node = self.head
+            while node.next:
+                node = node.next
+            new = Node(data)
+            node.next = new
+            new.prev = node
+            self.tail = new
+
+    def display(self):
+        node = self.head
+        while node:
+            print(node.data)
+            node = node.next
+
+    def reverse_display(self):
+        node = self.tail
+        while node:
+            print(node.data)
+            node = node.prev
+
+    def search_from_top(self, data):
+        node = self.head
+        while node:
+            if node.data == data:
+                return True
+            else:
+                node = node.next
+        return False
+
+    def search_from_bottom(self, data):
+        node = self.tail
+        while node:
+            if node.data == data:
+                return True
+            else:
+                node = node.prev
+        return False
+
+    def delete(self, data):
+        if data == self.head.data:
+            self.head = self.head.next
+            self.head.prev = None
+        elif data == self.tail.data:
+            self.tail = self.tail.prev
+            self.tail.next = None
+        else:
+            node = self.head
+            while node:
+                if node.data == data:
+                    node.prev.next = node.next
+                    node.next.prev = node.prev
+                    return True
+                else:
+                    node = node.next
+            return False
+
+    def insert_before(self, data, before):
+        if before == self.head.data:
+            new = Node(data)
+            self.head.prev = new
+            new.next = self.head
+            self.head = new
+        else:
+            node = self.tail
+            while node:
+                if node.data == before:
+                    before_new = node.prev
+                    new = Node(data)
+                    before_new.next = new
+                    new.prev = before_new
+                    new.next = node
+                    node.prev = new
+                    return
+                else:
+                    node = node.prev
+            return False
+
+    def insert_after(self, data, after):
+        if after == self.tail.data:
+            new = Node(data)
+            self.tail.next = new
+            new.prev = self.tail
+            self.tail = new
+        else:
+            node = self.head
+            while node:
+                if node.data == after:
+                    after_new = node.next
+                    new = Node(data)
+                    after_new.prev = new
+                    new.next = after_new
+                    new.prev = node
+                    node.next = new
+                    return
+                else:
+                    node = node.next
+            return False
+
+
+test_list = NodeCon(1)
+
+for data in range(2, 11):
+    test_list.insert(data)
+
+test_list.display()
+
+print("-----------------------")
+
+# test_list.delete(0)
+# test_list.delete(3)
+# test_list.delete(9)
+
+# test_list.display()
+
+# print(test_list.search_from_bottom(1))
+# print(test_list.search_from_top(3))
+# print(test_list.search_from_top(100))
+
+test_list.insert_before(0.5, 1)
+test_list.insert_before(2.5, 3)
+test_list.insert_after(10.5, 10)
+test_list.insert_after(7.5, 7)
+test_list.insert_before(2.5, 190)
+test_list.insert_after(10.5, 1123)
+
+
+test_list.display()
+
+# 삽입정렬 연습
+
+def insertion_sort(data):
+    for index in range(len(data) - 1):
+        for index2 in range(index + 1, 0, -1):
+            if data[index2] < data[index2 - 1]:
+                data[index2], data[index2 - 1] = data[index2 - 1], data[index2]
+            else:
+                break
+    return data
+
+import random
+
+Testlist = random.sample(range(20), 10)
+print(Testlist)
+
+a = insertion_sort(Testlist)
+print(a)
+
+# 선택정렬 연습
+
+def selection_sort(data):
+    for stand in range(len(data) - 1):
+        lowest = stand
+        for index in range(stand + 1, len(data)):
+            if data[lowest] > data[index]:
+                lowest = index
+        data[lowest], data[stand] = data[stand], data[lowest]
+    return data
+
+import random
+
+Testlist = random.sample(range(20), 10)
+print(Testlist)
+
+a = selection_sort(Testlist)
+print(a)
+
+# 버블정렬
+def bubble_sort(data):
+    for index in range(len(data) - 1):
+        swap = False
+        for index2 in range(len(data) - index - 1):
+            if data[index2] > data[index2 + 1]:
+                data[index2], data[index2 + 1] = data[index2 + 1], data[index2]
+                swap = True
+        if swap == False:
+            break
+    return data
+
+import random
+
+Testlist = random.sample(range(20), 10)
+print(Testlist)
+
+a = bubble_sort(Testlist)
+print(a)
+
+# 삽입정렬
+
+def insertion_sort(data):
+    for index in range(len(data) - 1):
+        for index2 in range(index + 1, 0, -1):
+            if data[index2] < data[index2 - 1]:
+                data[index2], data[index2 - 1] = data[index2 - 1], data[index2]
+            else:
+                break
+    return data
+
+import random
+
+Testlist = random.sample(range(20), 10)
+print(Testlist)
+
+a = insertion_sort(Testlist)
+print(a)
+"""
+# 선택정렬
+
+def selection_sort(data):
+    for stand in range(len(data) - 1):
+        lowest = stand
+        for index in range(stand + 1, len(data)):
+            if data[lowest] > data[index]:
+                lowest = index
+        data[stand], data[lowest] = data[lowest], data[stand]
+    return data
+
+import random
+
+Testlist = random.sample(range(20), 10)
+print(Testlist)
+
+a = selection_sort(Testlist)
 print(a)

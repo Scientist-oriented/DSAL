@@ -3,6 +3,3 @@ dictionary = {
     "B": "b"
 }
 
-for item in dictionary:
-    print(item)
-
