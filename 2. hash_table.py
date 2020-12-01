@@ -269,6 +269,10 @@ def save_data(data, value):
         hash_table[address] = [key, value]
 
     else:
+        if hash_table[address][0] == key:
+            hash_table[address][1] = value
+            return
+            # 같은 data값에 다른 value를 덮어씌울 경우 이 코드가 없으면 안됨
         for index in range(address, len(hash_table)):
             if hash_table[index] == 0:
                 hash_table[index] = [key, value]
@@ -295,12 +299,12 @@ def read(data):
     else:
         for index in range(address+1, len(hash_table)):
             if hash_table[index] == 0:
-                continue
+                return "No data"
             elif hash_table[index][0] == key:
                 return hash_table[index][1]
         for index in range(0, address):
             if hash_table[index] == 0:
-                continue
+                return "No data"
             elif hash_table[index][0] == key:
                 return hash_table[index][1]
         return "No data"
@@ -310,6 +314,7 @@ save_data("Kim", "Korean")
 save_data("Lee", "History")
 save_data("Moon", "English")
 save_data("Park", "Social Studies")
+save_data("Kim", "Math")
 
 print(hash_table)
 

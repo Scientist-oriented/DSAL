@@ -87,3 +87,5 @@ mst, total_weight = imp_prim(mygraph, 'A')
 print ('MST:', mst)
 print ('Total Weight:', total_weight)
 
+# sort를 쓰는 대신 heapq를 쓰는 이유는 중간에 원소가 계속 추가되기 때문에!
+

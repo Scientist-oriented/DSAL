@@ -5916,7 +5916,7 @@ print(Testlist)
 
 a = insertion_sort(Testlist)
 print(a)
-"""
+
 # 선택정렬
 
 def selection_sort(data):
@@ -5935,3 +5935,491 @@ print(Testlist)
 
 a = selection_sort(Testlist)
 print(a)
+
+# 머지소트 
+
+def merge_sort(data):
+    if len(data) <= 1:
+        return data
+
+    medium = len(data) // 2
+    left = merge_sort(data[:medium])
+    right = merge_sort(data[medium:])
+
+    return merge(left, right)
+
+def merge(left, right):
+    left_point = 0
+    right_point = 0
+    merged = []
+
+    while left_point < len(left) and right_point < len(right):
+        if left[left_point] < right[right_point]:
+            merged.append(left[left_point])
+            left_point += 1
+        else:
+            merged.append(right[right_point])
+            right_point += 1
+
+    while left_point < len(left):
+        merged.append(left[left_point])
+        left_point += 1
+
+    while right_point < len(right):
+        merged.append(right[right_point])
+        right_point += 1
+
+    return merged
+
+import random
+
+Testlist = random.sample(range(20), 10)
+print(Testlist)
+
+a = merge_sort(Testlist)
+print(a)
+
+# 퀵소트 연습
+
+def quick_sort(data):
+    if len(data) <= 1:
+        return data
+
+    pivot = data[0]
+    left = [item for item in data[1:] if item <= pivot]
+    right = [item for item in data[1:] if item > pivot]
+
+    return quick_sort(left) + [pivot] + quick_sort(right)
+
+import random
+
+Testlist = random.sample(range(20), 10)
+print(Testlist)
+
+a = quick_sort(Testlist)
+print(a)
+
+
+# 크루스칼 알고리즘
+
+mygraph = {
+    'vertices': ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+    'edges': [
+        (7, 'A', 'B'),
+        (5, 'A', 'D'),
+        (7, 'B', 'A'),
+        (8, 'B', 'C'),
+        (9, 'B', 'D'),
+        (7, 'B', 'E'),
+        (8, 'C', 'B'),
+        (5, 'C', 'E'),
+        (5, 'D', 'A'),
+        (9, 'D', 'B'),
+        (7, 'D', 'E'),
+        (6, 'D', 'F'),
+        (7, 'E', 'B'),
+        (5, 'E', 'C'),
+        (7, 'E', 'D'),
+        (8, 'E', 'F'),
+        (9, 'E', 'G'),
+        (6, 'F', 'D'),
+        (8, 'F', 'E'),
+        (11, 'F', 'G'),
+        (9, 'G', 'E'),
+        (11, 'G', 'F')
+    ]
+}
+
+parent = dict()
+rank = dict()
+
+def find(node):
+    if parent[node] != node:
+        parent[node] = find(parent[node])
+    return parent[node]
+
+def union(node1, node2):
+    root1 = find(node1)
+    root2 = find(node2)
+
+    if rank[root1] > rank[root2]:
+        parent[root2] = root1
+    else:
+        parent[root1] = root2
+        if rank[root1] == rank[root2]:
+            rank[root2] += 1
+
+def make_set(node):
+    parent[node] = node
+    rank[node] = 0
+
+def kruskal(graph):
+    mst = list()
+
+    for node in graph['vertices']:
+        make_set(node)
+
+    edges = graph['edges']
+    edges.sort()
+
+    for edge in edges:
+        weight, node1, node2 = edge
+        if find(node1) != find(node2):
+            union(node1, node2)
+            mst.append(edge)
+
+    return mst
+
+a = kruskal(mygraph)
+print(a)
+
+# 프림 알고리즘 연습
+
+myedges = [
+    (7, 'A', 'B'), (5, 'A', 'D'),
+    (8, 'B', 'C'), (9, 'B', 'D'), (7, 'B', 'E'),
+    (5, 'C', 'E'),
+    (7, 'D', 'E'), (6, 'D', 'F'),
+    (8, 'E', 'F'), (9, 'E', 'G'),
+    (11, 'F', 'G')
+]
+
+from collections import defaultdict
+from heapq import *
+
+def prim(start, edges):
+    mst = list()
+    adjacent_edges = defaultdict(list)
+    for weight, n1, n2 in edges:
+        adjacent_edges[n1].append((weight, n1, n2))
+        adjacent_edges[n2].append((weight, n2, n1))
+
+    connected_nodes = set(start)
+    candidate_edge_list = adjacent_edges[start]
+    heapify(candidate_edge_list)
+
+    while candidate_edge_list:
+        weight, n1, n2 = heappop(candidate_edge_list)
+        if n2 not in connected_nodes:
+            connected_nodes.add(n2)
+            mst.append((weight, n1, n2))
+
+            for edge in adjacent_edges[n2]:
+                if edge[2] not in connected_nodes:
+                    heappush(candidate_edge_list, edge)
+
+    return mst
+
+a = prim('A', myedges)
+print(a)
+
+# 개선된 프림알고리즘 연습
+mygraph = {
+    'A': {'B': 7, 'D': 5},
+    'B': {'A': 7, 'D': 9, 'C': 8, 'E': 7},
+    'C': {'B': 8, 'E': 5},
+    'D': {'A': 5, 'B': 9, 'E': 7, 'F': 6},
+    'E': {'B': 7, 'C': 5, 'D': 7, 'F': 8, 'G': 9},
+    'F': {'D': 6, 'E': 8, 'G': 11},
+    'G': {'E': 9, 'F': 11}    
+}
+
+from heapdict import heapdict
+
+def prim(graph, start):
+    mst, keys, pi, total_weight = list(), heapdict(), dict(), 0
+    for node in graph.keys():
+        keys[node] = float('inf')
+        pi[node] = None
+
+    keys[start], pi[start] = 0, start
+
+    while keys:
+        current_node, current_key = keys.popitem()
+        mst.append([pi[current_node], current_node, current_key])
+        total_weight += current_key
+        for adjacent, weight in graph[current_node].items():
+            if adjacent in keys and weight < keys[adjacent]:
+                keys[adjacent] = weight
+                pi[adjacent] = current_node
+    
+    return total_weight, mst
+
+mst, total_weight = prim(mygraph, 'A')
+print ('MST:', mst)
+print ('Total Weight:', total_weight)
+
+# 크루스칼 알고리즘 연습
+mygraph = {
+    'vertices': ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+    'edges': [
+        (7, 'A', 'B'),
+        (5, 'A', 'D'),
+        (7, 'B', 'A'),
+        (8, 'B', 'C'),
+        (9, 'B', 'D'),
+        (7, 'B', 'E'),
+        (8, 'C', 'B'),
+        (5, 'C', 'E'),
+        (5, 'D', 'A'),
+        (9, 'D', 'B'),
+        (7, 'D', 'E'),
+        (6, 'D', 'F'),
+        (7, 'E', 'B'),
+        (5, 'E', 'C'),
+        (7, 'E', 'D'),
+        (8, 'E', 'F'),
+        (9, 'E', 'G'),
+        (6, 'F', 'D'),
+        (8, 'F', 'E'),
+        (11, 'F', 'G'),
+        (9, 'G', 'E'),
+        (11, 'G', 'F')
+    ]
+}
+
+parent = dict()
+rank = dict()
+
+def find(node):
+    if parent[node] != node:
+        parent[node] = find(parent[node])
+    return parent[node]
+
+def union(node1, node2):
+    if rank[node1] > rank[node2]:
+        parent[node2] = node1
+    else:
+        parent[node1] = node2
+        if rank[node1] == rank[node2]:
+            rank[node2] += 1
+
+def make_set(node):
+    parent[node] = node
+    rank[node] = 0
+
+def kruskal(graph):
+    mst = list()
+    for node in graph['vertices']:
+        make_set(node)
+    edges = graph['edges']
+    edges.sort()
+
+    for edge in edges:
+        weight, node1, node2 = edge
+        if find(node1) != find(node2):
+            union(node1, node2)
+            mst.append(edge)
+    
+    return mst
+
+a = kruskal(mygraph)
+print(a)
+
+# 프림알고리즘
+
+myedges = [
+    (7, 'A', 'B'), (5, 'A', 'D'),
+    (8, 'B', 'C'), (9, 'B', 'D'), (7, 'B', 'E'),
+    (5, 'C', 'E'),
+    (7, 'D', 'E'), (6, 'D', 'F'),
+    (8, 'E', 'F'), (9, 'E', 'G'),
+    (11, 'F', 'G')
+]
+
+from collections import defaultdict
+from heapq import *
+
+def prim(start, edges):
+    mst = list()
+    adjacent_edges = defaultdict(list)
+
+    for weight, n1, n2 in edges:
+        adjacent_edges[n1].append((weight, n1, n2))
+        adjacent_edges[n2].append((weight, n2, n1))
+
+    connected_nodes = set(start)
+    candidate_edge_list = adjacent_edges[start]
+    heapify(candidate_edge_list)
+
+    while candidate_edge_list:
+        weight, n1, n2 = heappop(candidate_edge_list)
+        if n2 not in connected_nodes:
+            connected_nodes.add(n2)
+            mst.append((weight, n1, n2))
+            for edge in adjacent_edges[n2]:
+                if edge[2] not in connected_nodes:
+                    heappush(candidate_edge_list, edge)
+
+    return mst
+
+a = prim ('A', myedges)
+print(a)
+
+
+# 개선된 프림알고리즘 연습
+
+mygraph = {
+    'A': {'B': 7, 'D': 5},
+    'B': {'A': 7, 'D': 9, 'C': 8, 'E': 7},
+    'C': {'B': 8, 'E': 5},
+    'D': {'A': 5, 'B': 9, 'E': 7, 'F': 6},
+    'E': {'B': 7, 'C': 5, 'D': 7, 'F': 8, 'G': 9},
+    'F': {'D': 6, 'E': 8, 'G': 11},
+    'G': {'E': 9, 'F': 11}    
+}
+
+from heapdict import heapdict
+
+def prim(graph, start):
+    mst, keys, pi, total_weight = list(), heapdict(), dict(), 0
+    for node in graph.keys():
+        keys[node] = float('inf')
+        pi[node] = None
+
+    keys[start] = 0
+    pi[start] = start
+
+    while keys:
+        current_node, current_key = keys.popitem()
+        mst.append((pi[current_node], current_node, current_key))
+        total_weight += current_key
+        for adjacent, weight in graph[current_node].items():
+            if adjacent in keys and keys[adjacent] > weight:
+                keys[adjacent] = weight
+                pi[adjacent] = current_node
+                
+    return mst, total_weight
+
+mst, total_weight = prim(mygraph, 'A')
+print ('MST:', mst)
+print ('Total Weight:', total_weight)
+
+
+# 해쉬테이블 연습 (chaining)
+
+hash_table = [0 for _ in range(5)]
+
+def get_key(data):
+    return hash(data)
+
+def hash_function(key):
+    return key % 5
+
+def save_data(data, value):
+    key = get_key(data)
+    address = hash_function(key)
+
+    if hash_table[address] == 0:
+        hash_table[address] = [[key, value]]
+    else:
+        for item in hash_table[address]:
+            if key == item[0]:
+                item[1] = value
+                break
+        hash_table[address].append([key, value])
+
+def read(data):
+    key = get_key(data)
+    address = hash_function(key)
+
+    if hash_table[address] == 0:
+        return None
+    else:
+        for item in hash_table[address]:
+            if key == item[0]:
+                return item[1]
+        return None
+
+save_data("Kim", "Korean")
+save_data("Lee", "History")
+save_data("Moon", "English")
+save_data("Park", "Social Studies")
+save_data("Kim", "Math")
+
+print(hash_table)
+
+a = read("Kim")
+b = read("Lee")
+c = read("Moon")
+d = read("Park")
+e = read("Choi")
+
+
+print(a, b, c, d, e)
+
+"""
+# 해쉬테이블 연습 (linear probing)
+hash_table = [0 for _ in range(5)]
+
+def get_key(data):
+    return hash(data)
+
+def hash_function(key):
+    return key % 5
+
+def save_data(data, value):
+    key = get_key(data)
+    address = hash_function(key)
+
+    if hash_table[address] == 0:
+        hash_table[address] = [key, value]
+    else:
+        if hash_table[address][0] == key:
+            hash_table[address][1] = value
+            return
+        for index in range(address+1, len(hash_table)):
+            if hash_table[index] != 0:
+                if hash_table[index][0] == key:
+                    hash_table[index][1] = value
+                    return
+            else: 
+                hash_table[index] = [key, value]
+                return
+        for index in range(0, address):
+            if hash_table[index] != 0:
+                if hash_table[index][0] == key:
+                    hash_table[index][1] = value
+                    return
+            if hash_table[index] == 0:
+                hash_table[index] = [key, value]
+                return
+        return False
+
+def read(data):
+    key = get_key(data)
+    address = hash_function(key)
+
+    if hash_table[address] == 0:
+        return "No data"
+    elif hash_table[address][0] == key:
+        return hash_table[address][1]
+    else:
+        for index in range(address+1, len(hash_table)):
+            if hash_table[index] == 0:
+                return "No data"
+            if hash_table[index][0] == key:
+                return hash_table[index][1]
+        for index in range(0, address):
+            if hash_table[index] == 0:
+                return "No data"
+            if hash_table[index][0] == key:
+                return hash_table[index][1]
+        return "No data"
+
+save_data("Kim", "Korean")
+save_data("Lee", "History")
+save_data("Moon", "English")
+save_data("Park", "Social Studies")
+save_data("Kim", "Math")
+
+print(hash_table)
+
+a = read("Kim")
+b = read("Lee")
+c = read("Moon")
+d = read("Park")
+e = read("Choi")
+
+
+print(a, b, c, d, e)
