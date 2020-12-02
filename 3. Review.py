@@ -6348,7 +6348,7 @@ e = read("Choi")
 
 print(a, b, c, d, e)
 
-"""
+
 # 해쉬테이블 연습 (linear probing)
 hash_table = [0 for _ in range(5)]
 
@@ -6421,5 +6421,621 @@ c = read("Moon")
 d = read("Park")
 e = read("Choi")
 
-
 print(a, b, c, d, e)
+
+# 순차탐색
+
+def sequential_search(data, data_list):
+    for index in range(len(data_list)):
+        if data_list[index] == data:
+            return index
+    return -1
+
+import random
+
+data_list = []
+for num in range(10):
+    data_list.append(random.randint(1, 20))
+
+print(data_list)
+a = sequential_search(10, data_list)
+print(a)
+
+
+# 이진탐색
+
+def binary_search(search, data):
+    if len(data) == 0:
+        return False
+    if len(data) == 1:
+        if data[0] == search:
+            return True
+        else:
+            return False
+
+    medium = len(data) // 2
+    
+    if data[medium] == search:
+        return True
+    else:
+        if search < data[medium]:
+            return binary_search(search, data[:medium])
+        else:
+            return binary_search(search, data[medium+1:])
+
+import random
+
+data_list = set()
+while len(data_list) != 10:
+    data_list.add(random.randint(1, 20))
+
+data_list = list(data_list)
+
+print(data_list)
+data_list.sort()
+print(data_list)
+a = binary_search(10, data_list)
+print(a)
+
+
+# 너비우선탐색
+
+graph = dict()
+
+graph['A'] = ['B', 'C']
+graph['B'] = ['A', 'D']
+graph['C'] = ['A', 'G', 'H', 'I']
+graph['D'] = ['B', 'E', 'F']
+graph['E'] = ['D']
+graph['F'] = ['D']
+graph['G'] = ['C']
+graph['H'] = ['C']
+graph['I'] = ['C', 'J']
+graph['J'] = ['I']
+
+def bfs(graph, start):
+    visited = []
+    need_visit = []
+
+    need_visit.append(start)
+
+    while need_visit:
+        node = need_visit.pop(0)
+        if node not in visited:
+            visited.append(node)
+            need_visit.extend(graph[node])
+
+    return visited
+
+a = bfs(graph, "A")
+print(a)
+
+# 깊이우선탐색
+
+
+graph = dict()
+
+graph['A'] = ['B', 'C']
+graph['B'] = ['A', 'D']
+graph['C'] = ['A', 'G', 'H', 'I']
+graph['D'] = ['B', 'E', 'F']
+graph['E'] = ['D']
+graph['F'] = ['D']
+graph['G'] = ['C']
+graph['H'] = ['C']
+graph['I'] = ['C', 'J']
+graph['J'] = ['I']
+
+def dfs(graph, start):
+    visited = []
+    need_visit = []
+
+    need_visit.append(start)
+
+    while need_visit:
+        node = need_visit.pop()
+        if node not in visited:
+            visited.append(node)
+            need_visit.extend(graph[node])
+
+    return visited
+
+a = dfs(graph, "A")
+print(a)
+
+
+# 탐욕알고리즘 코인문제 연습
+
+coin_list = [1, 100, 50, 500]
+
+def min_coin_count(coin_list, value):
+    coin_list.sort(reverse=True)
+    total_coin_count = 0
+    details = list()
+
+    for coin in coin_list:
+        coin_count = value // coin
+        total_coin_count += coin_count
+        value -= coin * coin_count
+        details.append([coin, coin_count])
+
+    return total_coin_count, details
+
+a = min_coin_count(coin_list, 4720)
+print(a)
+
+
+# 부분배낭문제
+
+data_list = [(10, 10), (15, 12), (20, 10), (25, 8), (30, 5)]
+
+def get_max_value(data_list, capacity):
+    data_list = sorted(data_list, key=lambda x: x[1] / x[0], reverse=True)
+    total_value = 0
+    details = []
+
+    for data in data_list:
+        if data[0] < capacity:
+            total_value += data[1]
+            capacity -= data[0]
+            details.append([data[0], data[1], 1])
+        else:
+            fraction = capacity / data[0]
+            total_value += data[1] * fraction
+            details.append([data[0], data[1], fraction])
+            break
+    return total_value, details
+
+a = get_max_value(data_list, 30)
+print(a)
+
+
+# 다익스트라 알고리즘 복습
+
+mygraph = {
+    'A': {'B': 8, 'C': 1, 'D': 2},
+    'B': {},
+    'C': {'B': 5, 'D': 2},
+    'D': {'E': 3, 'F': 5},
+    'E': {'F': 1},
+    'F': {'A': 5}
+}
+
+import heapq
+
+def dijkstra(graph, start):
+    distances = {node: float('inf') for node in graph}
+    queue = list()
+    distances[start] = 0
+    heapq.heappush(queue, (distances[start], start))
+
+    while queue:
+        current_distance, current_node = heapq.heappop(queue)
+        if current_distance > distances[current_node]:
+            continue
+        for adjacent, weight in graph[current_node].items():
+            distance = current_distance + weight
+            if distance < distances[adjacent]:
+                distances[adjacent] = distance
+                heapq.heappush(queue, (distance, adjacent))
+
+    return distances
+
+a = dijkstra(mygraph, 'A')
+print(a)
+
+# 백트래킹 n queen 연습
+
+def solve_n_queens(N):
+    final_result = list()
+    DFS(N, 0, [], final_result)
+    return final_result
+
+def DFS(N, current_row, candidate, final_result):
+    if current_row == N:
+        final_result.append(candidate[:])
+        return
+    
+    for current_col in range(N):
+        if is_available(current_col, candidate):
+            candidate.append(current_col)
+            DFS(N, current_row+1, candidate, final_result)
+            candidate.pop()
+
+def is_available(current_col, candidate):
+    current_row = len(candidate)
+    for queen_row in range(current_row):
+        if candidate[queen_row] == current_col or abs(candidate[queen_row] - current_col) == current_row - queen_row:
+            return False
+    return True
+
+a = solve_n_queens(4)
+print(a)
+
+# 다익스트라 알고리즘 연습
+mygraph = {
+    'A': {'B': 8, 'C': 1, 'D': 2},
+    'B': {},
+    'C': {'B': 5, 'D': 2},
+    'D': {'E': 3, 'F': 5},
+    'E': {'F': 1},
+    'F': {'A': 5}
+}
+
+import heapq
+
+def dijkstra(graph, start):
+    distances = {node: float('inf') for node in graph}
+    queue = list()
+    distances[start] = 0
+    heapq.heappush(queue, [distances[start], start])
+
+    while queue:
+        current_distance, current_node = heapq.heappop(queue)
+        if current_distance > distances[current_node]:
+            continue
+        for adjacent, weight in graph[current_node].items():
+            distance = current_distance + weight
+            if distance < distances[adjacent]:
+                distances[adjacent] = distance
+                heapq.heappush(queue, [distance, adjacent])
+    return distances
+
+a = dijkstra(mygraph, 'A')
+print(a)
+
+# 백트래킹 n queen 문제
+
+def solve_n_queens(N):
+    final_result = []
+    DFS(N, 0, [], final_result)
+    return final_result
+
+def DFS(N, current_row, candidate, final_result):
+    if current_row == N:
+        final_result.append(candidate[:])
+        return
+
+    for current_col in range(N):
+        if is_available(current_col, candidate):
+            candidate.append(current_col)
+            DFS(N, current_row+1, candidate, final_result)
+            candidate.pop()
+
+def is_available(current_col, candidate):
+    current_row = len(candidate)
+    for queen_row in range(current_row):
+        if candidate[queen_row] == current_col or abs(current_col  - candidate[queen_row]) ==  current_row - queen_row:
+            return False
+    return True
+
+a = solve_n_queens(4)
+print(a)
+
+# 이진탐색트리
+
+class Node:
+    def __init__(self, data):
+        self.data = data
+        self.left = None
+        self.right = None
+
+class NodeCon:
+    def __init__(self, data):
+        self.head = Node(data)
+
+    def insert(self, data):
+        if self.head == None:
+            self.head = Node(data)
+        else:
+            node = self.head
+            while True:
+                if data < node.data:
+                    if node.left == None:
+                        node.left = Node(data)
+                        return 
+                    else:
+                        node = node.left
+                else:
+                    if node.right == None:
+                        node.right = Node(data)
+                        return
+                    else:
+                        node = node.right
+
+    def search(self, data):
+        node = self.head
+        while node:
+            if node.data == data:
+                return True
+            elif node.data > data:
+                node = node.left
+            else:
+                node = node.right
+        return False
+
+    def delete(self, data):
+        searched = False
+
+        node = self.head
+        parent_node = self.head
+
+        while True:
+            if data == node.data:
+                searched == True
+                break
+            elif data < node.data:
+                parent_node = node
+                node = node.left
+            else:
+                parent_node = node
+                node = node.right
+
+        if searched == False:
+            return False
+
+        if node.left == None and node.right == None:
+            if node.data < parent_node.data:
+                parent_node.left = None
+            else:
+                parent_node.right = None
+        elif node.left != None and node.right == None:
+            if node.data < parent_node.data:
+                parent_node.left = node.left
+            else:
+                parent_node.right = node.left
+        elif node.left == None and node.right != None:
+            if node.data < parent_node.data:
+                parent_node.left = node.right
+            else:
+                parent_node.right = node.right
+        else:
+            change_node = node.right
+            change_node_parent = node.right
+            while change_node.left != None:
+                change_node_parent = change_node
+                change_node = change_node.left
+            if change_node.right == None:
+                change_node_parent.left = None
+            else:
+                change_node_parent.left = change_node.right
+
+            if node.data < parent_node.data:
+                parent_node.left = change_node
+                change_node.left = node.left
+                change_node.right = node.right
+            else:
+                parent_node.right = change_node
+                change_node.left = node.left
+                change_node.right = node.right
+
+        return True
+
+tree = NodeCon(5)
+
+tree.insert(2)
+tree.insert(3)
+tree.insert(0)
+tree.insert(4)
+tree.insert(8)
+
+tree.search(1)
+tree.search(2)
+tree.search(3)
+tree.search(10)
+tree.search(20)
+
+print("-------------delete test----------------")
+
+import random
+
+test_nums = set()
+while len(test_nums) != 100:
+    test_nums.add(random.randint(0, 999))
+
+print(test_nums)
+
+test_tree = NodeCon(500)
+
+for nums in test_nums:
+    test_tree.insert(nums)
+
+for nums in test_nums:
+    test_tree.search(nums)
+
+print("test ready")
+
+test_delete_nums = set()
+test_nums_list = list(test_nums)
+
+while len(test_delete_nums) != 10:
+    test_delete_nums.add(test_nums_list[random.randint(0, 99)])
+
+print(test_delete_nums)
+
+for nums in test_delete_nums:
+    test_tree.delete(nums)
+
+# 버블정렬
+
+def bubble_sort(data):
+    for index in range(len(data) - 1):
+        swap = False
+        for index2 in range(len(data) - index - 1):
+            if data[index2] > data[index2 + 1]:
+                data[index2], data[index2 + 1] = data[index2 + 1], data[index2]
+                swap = True
+        if swap == False:
+            break
+    return data
+
+import random
+data = random.sample(range(20), 10)
+a = bubble_sort(data)
+print(a)
+
+# 삽입정렬
+def insertion_sort(data):
+    for index in range(len(data) - 1):
+        for index2 in range(index+1, 0, -1):
+            if data[index2] < data[index2 - 1]:
+                data[index2], data[index2 - 1] = data[index2 - 1], data[index2]
+            else:
+                break
+    return data
+import random
+data = random.sample(range(20), 10)
+a = insertion_sort(data)
+print(a)
+
+# 선택정렬
+def selection_sort(data):
+    for stand in range(len(data) - 1):
+        lowest = stand
+        for index in range(stand+1, len(data)):
+            if data[lowest] > data[index]:
+                lowest = index
+        data[stand], data[lowest] = data[lowest], data[stand]
+    return data
+
+import random
+data = random.sample(range(20), 10)
+a = selection_sort(data)
+print(a)
+
+# 머지소트 연습
+
+def merge_sort(data):
+    if len(data) <= 1:
+        return data
+
+    medium = len(data) // 2
+    left = merge_sort(data[:medium])
+    right = merge_sort(data[medium:])
+
+    return merge(left, right)
+
+def merge(left, right):
+    merged = []
+    left_point = 0
+    right_point = 0
+
+    while left_point < len(left) and right_point < len(right):
+        if left[left_point] < right[right_point]:
+            merged.append(left[left_point])
+            left_point += 1
+        else:
+            merged.append(right[right_point])
+            right_point += 1
+
+    while left_point < len(left):
+        merged.append(left[left_point])
+        left_point += 1
+
+    while right_point < len(right):
+        merged.append(right[right_point])
+        right_point += 1
+
+    return merged
+
+import random
+data = random.sample(range(20), 10)
+print(data)
+a = merge_sort(data)
+print(a)
+
+# 퀵소트 연습
+
+def quick_sort(data):
+    if len(data) <= 1:
+        return data
+
+    pivot = data[0]
+    left = [item for item in data[1:] if item <= pivot]
+    right = [item for item in data[1:] if item > pivot]
+
+    return quick_sort(left) + [pivot] + quick_sort(right)
+
+import random
+data = random.sample(range(20), 10)
+print(data)
+a = quick_sort(data)
+print(a)
+
+"""
+# 크루스칼 알고리즘 연습
+
+mygraph = {
+    'vertices': ['A', 'B', 'C', 'D', 'E', 'F', 'G'],
+    'edges': [
+        (7, 'A', 'B'),
+        (5, 'A', 'D'),
+        (7, 'B', 'A'),
+        (8, 'B', 'C'),
+        (9, 'B', 'D'),
+        (7, 'B', 'E'),
+        (8, 'C', 'B'),
+        (5, 'C', 'E'),
+        (5, 'D', 'A'),
+        (9, 'D', 'B'),
+        (7, 'D', 'E'),
+        (6, 'D', 'F'),
+        (7, 'E', 'B'),
+        (5, 'E', 'C'),
+        (7, 'E', 'D'),
+        (8, 'E', 'F'),
+        (9, 'E', 'G'),
+        (6, 'F', 'D'),
+        (8, 'F', 'E'),
+        (11, 'F', 'G'),
+        (9, 'G', 'E'),
+        (11, 'G', 'F')
+    ]
+}
+
+parent = dict()
+rank = dict()
+
+def find(node):
+    if parent[node] != node:
+        parent[node] = find(parent[node])
+    return parent[node]
+
+def union(node1, node2):
+    root1 = find(node1)
+    root2 = find(node2)
+
+    if rank[root1] > rank[root2]:
+        parent[root2] = root1
+    else:
+        parent[root1] = root2
+        if rank[root1] == rank[root2]:
+            rank[root2] += 1
+
+def make_set(node):
+    parent[node] = node
+    rank[node] = 0
+
+def kruskal(graph):
+    mst = list()
+
+    for node in graph['vertices']:
+        make_set(node)
+
+    edges = graph['edges']
+    edges.sort()
+
+    for edge in edges:
+        weight, node1, node2 = edge
+        if find(node1) != find(node2):
+            union(node1, node2)
+            mst.append(edge)
+
+    return mst
+
+a = kruskal(mygraph)
+print(a)
+    
+
+
+
