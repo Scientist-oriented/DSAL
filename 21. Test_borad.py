@@ -1,5 +1,2 @@
-dictionary = {
-    "A": "a",
-    "B": "b"
-}
-
+a = ['a', 'b', 'c']
+print(a[4:])
