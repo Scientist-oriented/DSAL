@@ -120,6 +120,8 @@ while len(heap) != 1:
 print(result)
 '''
 # 문제집 문제 (위상정렬)
+    # 순서가 정해진 작업을 차례로 수행해야할 때
+    # 위상정렬은 사이클이 없음
 
 import sys
 sys.stdin=open("input.txt", "rt")
@@ -129,6 +131,7 @@ import heapq
 n, m = map(int, input().split())
 array = [[] for i in range(n + 1)]
 indegree = [0] * (n + 1)
+    # 진입차수를 저장함 (이 node에 진입하기 위해서 얼마의 node를 진입해서 들어와야하는가?)
 
 heap = []
 result = []
@@ -148,6 +151,7 @@ while heap:
     for y in array[data]:
         indegree[y] -= 1
         if indegree[y] == 0:
+            # 진입차수가 0이면 우선순위큐에 등록
             heapq.heappush(heap, y)
 
 for i in result:
