@@ -4,9 +4,6 @@
     # 점화식을 수학적으로 세워야함. (동적프로그래밍의 핵심 = 점화식)
     # 프린트물 참고
 
-import sys
-sys.stdin=open("input.txt", "rt")
-
 n = int(input())
 
 results = [0] * 1000001
@@ -21,25 +18,6 @@ for index in range(3, n + 1):
     # 나머지끼리 더해서 나눈 나머지 = 다 더해서 나눈 나머지
 
 print(results[n])
-
-# 가장 긴 증가하는 부분 수열
-import sys
-sys.stdin=open("input.txt", "rt")
-
-n = int(input())
-array = list(map(int, input().split(' ')))
-max_length = 1
-
-for index in range(n):
-    head = array[index]
-    count = 1
-    for index2 in range(index, n):
-        if head < array[index2]:
-            count += 1
-            head = array[index2]
-    max_length = max(count, max_length)
-
-print(max_length)
 
 # 평범한 배낭문제
     # 복잡한 문제임! 차분하게 생각할 것!
@@ -86,6 +64,8 @@ for i in range(1, n):
             dp[i] = max(dp[i], dp[j] + 1)
             # 원래 수열하고 거기서 부터 array[i]로 이어지는 수열과 비교
             # 계속 갱신해가면서 최장수열을 구하는 시스템
+
+print(max(dp))
 
 
             
