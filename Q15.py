@@ -67,26 +67,39 @@ if max(cranes) < max(boxes):
     # 크레인이 옮길 수 없는 박스가 있는지 확인
 
 position = [0] * n
+# 각각의 크레인이 지금 옮겨야 하는 박스의 번호
 checked = [False] * m
+# 각 박스를 옮겼는지 여부를 저장
 
 cranes.sort(reverse=True)
+# 힘 좋은 크레인부터 쓰기 위해 역순 정렬
 boxes.sort(reverse=True)
+# 무거운 박스부터 옮기기 위해 역순 정렬
 
 result = 0
 count = 0
 
 while True:
+    # 반복문이 한번 돌 때마다 1분
     if count == len(boxes):
         break
         # 박스를 다 옮겼다면 반복문 종료
     for i in range(n):
+        # 매분마다 모든 크레인을 확인
         while position[i] < len(boxes):
+            # 박스 번호가 전체 박스 개수와 같아지면 더 이상 나를 수 있는 가벼운 박스가 없는 것
             if not checked[position[i]] and cranes[i] >= boxes[position[i]]:
+                # 현재 박스가 아직 안 옮겨졌고, 크레인이 그 박스를 옮길 수 있으면
                 checked[position[i]] = True
+                # 그 박스를 옮겼다고 체크하고
                 position[i] += 1
+                # 다음 박스를 옮길 차례라고 체크하고
                 count += 1
+                # 총 옮긴 박스의 갯수도 추가
                 break
             position[i] += 1
+            # 박스번호를 늘려가면서 (= 점점 가벼운 박스로 가면서) 탐색
     result += 1
+    # 매분 지날 때마다 체크
 
 print(result)
