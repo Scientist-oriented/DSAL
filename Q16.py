@@ -53,8 +53,8 @@ from collections import deque
     # double-ended queue라서 왼쪽, 오른쪽에서 나 원소를 뽑을 수 있는 queue라고 보면 된다.
 import heapq
 import sys
-
 input = sys.stdin.readline
+    # 기존의 input보다 속도가 빠르다고 함.
 
 def dijkstra():
     # 최단경로를 찾는 알고리즘
@@ -68,6 +68,7 @@ def dijkstra():
         for i in adj[now]:
             cost = dist + i[1]
             if distance[i[0]] > cost and not dropped[now][i[0]]:
+                # dropped가 True인 경우 최단경로에 소속된 node임으로 계산X
                 distance[i[0]] = cost
                 heapq.heappush(heap_data, (cost, i[0]))
 
