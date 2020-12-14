@@ -45,7 +45,7 @@ for _ in range(int(input())):
     # 그 시간을 각각 고려해야하는 것이 아니다.
     # 어차피 가장 오래걸리는 것이 기준임 (다익스트라 알고리즘의 특징)
 
-'''
+
 
 # 거의 최단경로 문제
 
@@ -95,6 +95,7 @@ while True:
         break
     start, end = map(int, input().split())
     adj = [[] for _ in range(n + 1)]
+    # 어차피 node들이 다 자연수로 되어 있으니까 defaultdict를 만드는 대신 이렇게 index번호로
     reverse_adj = [[] for _ in range(n + 1)]
     # 역으로 거스르기 위해서 필요함
     for _ in range(m):
@@ -106,11 +107,85 @@ while True:
     dijkstra()
     bfs()
     distance = [1e9] * (n + 1)
+    # 최단경로를 제외하고 다시 돌려야 하므로 distance를 초기화 해준다.
     dijkstra()
     if distance[end] != 1e9:
+        # 가는 길이 무한대가 아니면 = 가는 길이 존재한다면!
         print(distance[end])
     else:
         print(-1)
 
+'''
+# 우주신과의 교감
 
+import math
+import sys
+input = sys.stdin.readline
 
+def get_distance(p1, p2):
+    a = p1[0] - p2[0]
+    b = p1[1] - p2[1]
+    return math.sqrt((a * a) + (b * b))
+
+def get_parent(parent, n):
+    if parent[n] == n:
+        return n
+    return get_parent(parent, parent[n])
+
+def union_parent(parent, a, b):
+    a = get_parent(parent, a)
+    b = get_parent(parent, b)
+    if a < b:
+        parent[b] = a
+    else:
+        parent[a] = b
+    # 이 문제에서 node는 어차피 정수로 주어지므로 굳이 rank를 만들지 않고
+    # node의 값이 높은 쪽이 parent가 되는 것으로 한다.
+
+def find_parent(parent, a, b):
+    a = get_parent(parent, a)
+    b = get_parent(parent, b)
+    if a == b:
+        return True
+    else:
+        return False
+    # 사이클이 생기는지 안생기는지 확인
+
+edges = []
+parent = {}
+locations = []
+n, m = map(int, input().split())
+
+for _ in range(n):
+    x, y = map(int, input().split())
+    locations.append((x, y))
+# 좌표를 저장한다.
+
+length = len(locations)
+
+for i in range(length - 1):
+    for j in range(i + 1, length):
+        edges.append((i + 1, j + 1, get_distance(locations[i], locations[j])))
+    
+    # edge를 저장한다
+    # (a, b, distance): 1번 좌표와 2번 좌표 사이의 distance
+
+for i in range(1, n + 1):
+    parent[i] = i
+    # 모든 node의 초기화 과정
+
+for i in range(m):
+    a, b = map(int, input().split())
+    union_parent(parent, a, b)
+
+edges.sort(key=lambda data: data[2])
+    # edge를 distance 기준으로 정렬
+
+result = 0
+for a, b, cost in edges:
+    if not find_parent(parent, a, b):
+        union_parent(parent, a, b)
+        result += cost
+        
+print("%0.2f"% result)
+    # 0.2 (소수점 두자리까지 반올림해서) f(실수)를 출력하시오!
