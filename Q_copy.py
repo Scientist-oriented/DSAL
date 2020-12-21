@@ -126,3 +126,30 @@ for i in x:
     else:
         print('1')
 
+# 친구 네트워크
+
+def find(x):
+    if x == parent[x]:
+        return x
+    else:
+        return find(parent[x])
+
+def union(x, y):
+    x = find(x)
+    y = find(y)
+
+    if x != y:
+        parent[y] = x
+        number[x] += number[y]
+
+test_case = int(input())
+
+for _ in range(test_case):
+    parent = dict()
+    number = dict()
+
+    f = int(input())
+
+    for _ in range(f):
+
+
