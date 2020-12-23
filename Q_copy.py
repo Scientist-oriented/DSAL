@@ -182,6 +182,9 @@ for i in range(n):
 for i in array:
     print(i)
 
+
+    
+
         
 
 
