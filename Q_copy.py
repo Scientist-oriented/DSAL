@@ -151,5 +151,37 @@ for _ in range(test_case):
     f = int(input())
 
     for _ in range(f):
+        x, y = input().split(' ')
+
+        if x not in parent:
+            parent[x] = x
+            number[x] = 1
+
+        if y not in parent:
+            parent[y] = y
+            number[y] = 1
+
+        union(x, y)
+
+        print(number[find(x)])
+        
+# 수 정렬하기
+n = int(input())
+array = list()
+
+for _ range(n):
+    array.append(int(input()))
+
+for i in range(n):
+    min_index - i
+    for j in range(i + 1, n):
+        if array[min_index] > array[j]:
+            min_index = j
+    array[i], array[min_index] = array[min_index], array[i]
+
+for i in array:
+    print(i)
+
+        
 
 
